@@ -1,0 +1,85 @@
+﻿@page
+@model DotnetLocation.Pages.Vehicules.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Vehicule</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Vehicule.Id" />
+            <div class="form-group">
+<span class="text-danger">*</span>
+                <label asp-for="Vehicule.CategorieId" class="control-label"></label>
+                <select asp-for="Vehicule.CategorieId" class="form-control" asp-items="ViewBag.CategorieId" aria-required="true"></select>
+                <span asp-validation-for="Vehicule.CategorieId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+<span class="text-danger">*</span>
+                <label asp-for="Vehicule.Marque" class="control-label"></label>
+                <input asp-for="Vehicule.Marque" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Vehicule.Marque" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+<span class="text-danger">*</span>
+                <label asp-for="Vehicule.Model" class="control-label"></label>
+                <input asp-for="Vehicule.Model" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Vehicule.Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicule.Annee" class="control-label"></label>
+                <input asp-for="Vehicule.Annee" class="form-control" />
+                <span asp-validation-for="Vehicule.Annee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+<span class="text-danger">*</span>
+                <label asp-for="Vehicule.Transmission" class="control-label"></label>
+                <input asp-for="Vehicule.Transmission" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Vehicule.Transmission" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+<span class="text-danger">*</span>
+                <label asp-for="Vehicule.Carburant" class="control-label"></label>
+                <input asp-for="Vehicule.Carburant" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Vehicule.Carburant" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicule.Prix" class="control-label"></label>
+                <input asp-for="Vehicule.Prix" class="form-control" />
+                <span asp-validation-for="Vehicule.Prix" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicule.Caution" class="control-label"></label>
+                <input asp-for="Vehicule.Caution" class="form-control" />
+                <span asp-validation-for="Vehicule.Caution" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Vehicule.Penalite" class="control-label"></label>
+                <input asp-for="Vehicule.Penalite" class="form-control" />
+                <span asp-validation-for="Vehicule.Penalite" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Vehicule.Disponibilite" /> @Html.DisplayNameFor(model => model.Vehicule.Disponibilite)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

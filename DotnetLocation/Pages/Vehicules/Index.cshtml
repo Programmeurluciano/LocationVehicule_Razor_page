@@ -1,0 +1,90 @@
+﻿@page
+@model DotnetLocation.Pages.Vehicules.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Categorie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Marque)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Annee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Transmission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Carburant)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Prix)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Caution)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Penalite)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Vehicule[0].Disponibilite)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Vehicule) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categorie.Nom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Marque)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Annee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Transmission)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Carburant)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prix)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Caution)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Penalite)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Disponibilite)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,62 @@
+﻿@page
+@model DotnetLocation.Pages.Reservations.CreateModel
+
+        @{
+        ViewData["Title"] = "Create";
+        }
+        
+        <h1>Create</h1>
+        
+    <h4>Reservation</h4>
+    <hr />
+    <div class="row">
+    <div class="col-md-4">
+    <form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Reservation.ClientId" class="control-label"></label>
+                <select asp-for="Reservation.ClientId" class ="form-control" asp-items="ViewBag.ClientId" aria-required="true"></select>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Reservation.VehiculeId" class="control-label"></label>
+                <select asp-for="Reservation.VehiculeId" class ="form-control" asp-items="ViewBag.VehiculeId" aria-required="true"></select>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Reservation.DateDebut" class="control-label"></label>
+                <input asp-for="Reservation.DateDebut" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Reservation.DateDebut" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Reservation.DateFin" class="control-label"></label>
+                <input asp-for="Reservation.DateFin" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Reservation.DateFin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reservation.DateRetourVehicule" class="control-label"></label>
+                <input asp-for="Reservation.DateRetourVehicule" class="form-control" />
+                <span asp-validation-for="Reservation.DateRetourVehicule" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Reservation.Status" class="control-label"></label>
+                <select asp-for="Reservation.Status" class="form-control" aria-required="true"></select>
+                <span asp-validation-for="Reservation.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

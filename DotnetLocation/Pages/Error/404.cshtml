@@ -1,0 +1,72 @@
+﻿@page
+@model DotnetLocation.Pages.Error._404Model
+@{
+    Layout = null;
+    ViewData["Title"] = "Page introuvable";
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="~/assets/images/favicon.svg" type="image/x-icon" />
+    <title>@ViewData["Title"] - DotnetLocation</title>
+
+    <!-- ========= CSS ========= -->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/lineicons.css" />
+    <link rel="stylesheet" href="~/assets/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="~/assets/css/fullcalendar.css" />
+    <link rel="stylesheet" href="~/assets/css/main.css" />
+
+    <style>
+        /* Forcer la card à prendre toute la hauteur */
+        .error-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-style {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid error-page">
+
+        <!-- ========= Error Card ========= -->
+        <div class="card-style text-center">
+            <div class="error-box">
+
+                <img class="mx-auto mb-20" src="~/assets/images/error.svg" alt="Page introuvable">
+
+                <h1 class="fw-700 mb-15">Page introuvable</h1>
+
+                <p class="text-sm mb-25">
+                    La page que vous recherchez a été déplacée, supprimée,
+                    renommée ou n’a peut-être jamais existé.
+                </p>
+
+                <div class="d-flex align-items-center justify-content-center gap-3">
+                    <a href="/" class="main-btn primary-btn btn-hover">
+                        Retour à l’accueil
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <!-- ========= End Error Card ========= -->
+
+    </div>
+</body>
+</html>
