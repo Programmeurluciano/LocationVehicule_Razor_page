@@ -2,84 +2,738 @@
 @model DotnetLocation.Pages.Vehicules.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Modifier un Véhicule";
 }
 
-<h1>Edit</h1>
-
-<h4>Vehicule</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Vehicule.Id" />
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Vehicule.CategorieId" class="control-label"></label>
-                <select asp-for="Vehicule.CategorieId" class="form-control" asp-items="ViewBag.CategorieId" aria-required="true"></select>
-                <span asp-validation-for="Vehicule.CategorieId" class="text-danger"></span>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Modifier un Véhicule</h2>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Vehicule.Marque" class="control-label"></label>
-                <input asp-for="Vehicule.Marque" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Marque" class="text-danger"></span>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                               Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">
+                               Véhicules
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Modifier
+                        </li>
+                    </ol>
+                </nav>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Vehicule.Model" class="control-label"></label>
-                <input asp-for="Vehicule.Model" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Model" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Annee" class="control-label"></label>
-                <input asp-for="Vehicule.Annee" class="form-control" />
-                <span asp-validation-for="Vehicule.Annee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Vehicule.Transmission" class="control-label"></label>
-                <input asp-for="Vehicule.Transmission" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Transmission" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Vehicule.Carburant" class="control-label"></label>
-                <input asp-for="Vehicule.Carburant" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Carburant" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Prix" class="control-label"></label>
-                <input asp-for="Vehicule.Prix" class="form-control" />
-                <span asp-validation-for="Vehicule.Prix" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Caution" class="control-label"></label>
-                <input asp-for="Vehicule.Caution" class="form-control" />
-                <span asp-validation-for="Vehicule.Caution" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Penalite" class="control-label"></label>
-                <input asp-for="Vehicule.Penalite" class="form-control" />
-                <span asp-validation-for="Vehicule.Penalite" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Vehicule.Disponibilite" /> @Html.DisplayNameFor(model => model.Vehicule.Disponibilite)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+        <!-- end col -->
     </div>
+    <!-- end row -->
 </div>
+<!-- ========== title-wrapper end ========== -->
 
-<div>
-    <a asp-page="./Index">Back to List</a>
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Formulaire de modification de véhicule</h6>
+                        <p class="text-sm mb-0">
+                            Modifiez les informations du véhicule <strong>@Model.Vehicule?.Marque @Model.Vehicule?.Model</strong>
+                        </p>
+                    </div>
+                    <div class="badge @(Model.Vehicule?.Disponibilite == true ? "bg-success" : "bg-warning")">
+                        <i class="lni @(Model.Vehicule?.Disponibilite == true ? "lni-checkmark-circle" : "lni-timer") me-1"></i>
+                        @(Model.Vehicule?.Disponibilite == true ? "Disponible" : "Indisponible")
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="lni lni-checkmark-circle me-2"></i>
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="lni lni-warning me-2"></i>
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form method="post" enctype="multipart/form-data" id="vehicleForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+                        <input type="hidden" asp-for="Vehicule.Id" />
+
+                        <div class="row">
+                            <!-- Catégorie -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.CategorieId" class="form-label fw-500">
+                                        Catégorie <span class="text-danger">*</span>
+                                    </label>
+                                    <select asp-for="Vehicule.CategorieId"
+                                            class="form-select"
+                                            asp-items="ViewBag.CategorieId"
+                                            aria-required="true">
+                                        <option value="">-- Sélectionner une catégorie --</option>
+                                    </select>
+                                    <small class="form-text text-muted">Choisissez la catégorie appropriée pour ce véhicule</small>
+                                    <span asp-validation-for="Vehicule.CategorieId" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Année -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Annee" class="form-label fw-500">
+                                        Année
+                                    </label>
+                                    <input asp-for="Vehicule.Annee" class="form-control"
+                                           placeholder="Ex: 2023" type="number" min="1900" max="@DateTime.Now.Year" />
+                                    <small class="form-text text-muted">Année de fabrication du véhicule</small>
+                                    <span asp-validation-for="Vehicule.Annee" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Marque -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Marque" class="form-label fw-500">
+                                        Marque <span class="text-danger">*</span>
+                                    </label>
+                                    <input asp-for="Vehicule.Marque" class="form-control"
+                                           placeholder="Ex: Toyota, Renault, etc." aria-required="true" />
+                                    <small class="form-text text-muted">Marque du véhicule</small>
+                                    <span asp-validation-for="Vehicule.Marque" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Modèle -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Model" class="form-label fw-500">
+                                        Modèle <span class="text-danger">*</span>
+                                    </label>
+                                    <input asp-for="Vehicule.Model" class="form-control"
+                                           placeholder="Ex: Corolla, Clio, etc." aria-required="true" />
+                                    <small class="form-text text-muted">Modèle spécifique du véhicule</small>
+                                    <span asp-validation-for="Vehicule.Model" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Transmission -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Transmission" class="form-label fw-500">
+                                        Transmission <span class="text-danger">*</span>
+                                    </label>
+                                    <select asp-for="Vehicule.Transmission" class="form-select" aria-required="true">
+                                        <option value="">-- Sélectionner --</option>
+                                        <option value="Manuelle">Manuelle</option>
+                                        <option value="Automatique">Automatique</option>
+                                    </select>
+                                    <small class="form-text text-muted">Type de transmission du véhicule</small>
+                                    <span asp-validation-for="Vehicule.Transmission" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Carburant -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Carburant" class="form-label fw-500">
+                                        Carburant <span class="text-danger">*</span>
+                                    </label>
+                                    <select asp-for="Vehicule.Carburant" class="form-select" aria-required="true">
+                                        <option value="">-- Sélectionner --</option>
+                                        <option value="Essence">Essence</option>
+                                        <option value="Diesel">Diesel</option>
+                                        <option value="Électrique">Électrique</option>
+                                        <option value="Hybride">Hybride</option>
+                                    </select>
+                                    <small class="form-text text-muted">Type de carburant utilisé</small>
+                                    <span asp-validation-for="Vehicule.Carburant" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Prix -->
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Prix" class="form-label fw-500">
+                                        Prix par jour
+                                    </label>
+                                    <div class="input-group">
+                                        <input asp-for="Vehicule.Prix" class="form-control"
+                                               placeholder="0.00" type="number" step="0.01" min="0" />
+                                        <span class="input-group-text">Ar</span>
+                                    </div>
+                                    <small class="form-text text-muted">Prix de location par jour en Ariary</small>
+                                    <span asp-validation-for="Vehicule.Prix" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Caution -->
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Caution" class="form-label fw-500">
+                                    Caution
+                                    </label>
+                                    <div class="input-group">
+                                        <input asp-for="Vehicule.Caution" class="form-control"
+                                               placeholder="0.00" type="number" step="0.01" min="0" />
+                                        <span class="input-group-text">Ar</span>
+                                    </div>
+                                    <small class="form-text text-muted">Montant de caution en Ariary</small>
+                                    <span asp-validation-for="Vehicule.Caution" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Pénalité -->
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Vehicule.Penalite" class="form-label fw-500">
+                                        Pénalité par jour
+                                    </label>
+                                    <div class="input-group">
+                                        <input asp-for="Vehicule.Penalite" class="form-control"
+                                               placeholder="0.00" type="number" step="0.01" min="0" />
+                                        <span class="input-group-text">Ar</span>
+                                    </div>
+                                    <small class="form-text text-muted">Pénalité par jour de retard en Ariary</small>
+                                    <span asp-validation-for="Vehicule.Penalite" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload images multiples (modification) -->
+                        <div class="mb-4">
+                            <div class="form-group">
+                                <label class="form-label fw-500">
+                                    Images du véhicule
+                                </label>
+                                
+                                <!-- Aperçu des images existantes -->
+                                @if (Model.Vehicule != null && Model.Vehicule.Images != null && Model.Vehicule.Images.Any())
+                                {
+                                    <div class="existing-images mb-3">
+                                        <h6 class="text-sm mb-2">Images actuelles :</h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach (var image in Model.Vehicule.Images)
+                                            {
+                                                <div class="position-relative">
+                                                    <img src="@image.ImageUrl" class="img-thumbnail" 
+                                                         style="width: 100px; height: 100px; object-fit: cover;" 
+                                                         alt="Image véhicule" />
+                                                    <div class="position-absolute top-0 end-0">
+                                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                                style="padding: 2px 6px; font-size: 10px;"
+                                                                onclick="removeExistingImage(@image.Id)">
+                                                            <i class="lni lni-close"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <input type="hidden" id="removedImages" name="RemovedImages" value="" />
+                                    </div>
+                                }
+                                
+                                <!-- Zone d'upload de nouvelles images -->
+                                <div class="file-upload-area" id="dropArea">
+                                    <input type="file"
+                                           name="NewImages"
+                                           multiple
+                                           accept="image/*"
+                                           class="form-control d-none"
+                                           id="imageUpload" />
+                                    <div class="text-center">
+                                        <i class="lni lni-cloud-upload text-primary" style="font-size: 48px;"></i>
+                                        <h6 class="mt-2">Ajouter de nouvelles images</h6>
+                                        <p class="text-sm text-muted">ou</p>
+                                        <button type="button" class="main-btn outline-btn btn-hover" onclick="document.getElementById('imageUpload').click()">
+                                            <i class="lni lni-folder me-2"></i> Parcourir les fichiers
+                                        </button>
+                                    </div>
+                                    <small class="form-text text-muted d-block mt-3">
+                                        Vous pouvez ajouter de nouvelles images. Formats acceptés : JPG, PNG, GIF. Taille max : 5MB par image.
+                                    </small>
+                                </div>
+                                <div id="imagePreview" class="mt-3 d-none">
+                                    <h6 class="mb-2">Nouvelles images :</h6>
+                                    <div class="image-preview-container d-flex flex-wrap gap-2"></div>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearNewImages()">
+                                            <i class="lni lni-trash-can me-1"></i> Supprimer toutes les nouvelles images
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="uploadError" class="text-danger text-sm mt-2 d-none"></div>
+                            </div>
+                        </div>
+
+                        <!-- Disponibilité -->
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" asp-for="Vehicule.Disponibilite" id="disponibiliteSwitch" />
+                                <label class="form-check-label fw-500" for="disponibiliteSwitch">
+                                    <i class="lni lni-checkmark-circle me-1"></i> Véhicule disponible
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">
+                                Cochez/décochez pour modifier la disponibilité du véhicule.
+                            </small>
+                        </div>
+
+                        <!-- Boutons -->
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <div>
+                                <a asp-page="./Details" asp-route-id="@Model.Vehicule.Id" class="main-btn info-btn btn-hover me-2">
+                                    <i class="lni lni-eye me-2"></i> Détails
+                                </a>
+                                <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                    <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                </a>
+                            </div>
+                            <div>
+                                <button type="reset" class="main-btn secondary-btn btn-hover me-2">
+                                    <i class="lni lni-reload me-2"></i> Annuler modifications
+                                </button>
+                                <button type="submit" class="main-btn primary-btn btn-hover">
+                                    <i class="lni lni-checkmark-circle me-2"></i> Enregistrer les modifications
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Informations utiles -->
+                <div class="card-footer bg-light">
+
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus sur le premier champ
+            document.getElementById('Vehicule_CategorieId').focus();
+
+            // Variables globales
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewContainer = document.querySelector('.image-preview-container');
+            const dropArea = document.getElementById('dropArea');
+            const uploadError = document.getElementById('uploadError');
+            const removedImagesInput = document.getElementById('removedImages');
+            let selectedFiles = [];
+            let removedImages = [];
+
+            // Drag and drop functionality
+            if (dropArea) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, highlight, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, unhighlight, false);
+                });
+
+                function highlight() {
+                    dropArea.style.borderColor = '#4a6cf7';
+                    dropArea.style.backgroundColor = '#f0f5ff';
+                }
+
+                function unhighlight() {
+                    dropArea.style.borderColor = '#dee2e6';
+                    dropArea.style.backgroundColor = '#f8f9fa';
+                }
+
+                dropArea.addEventListener('drop', handleDrop, false);
+
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    handleFiles(files);
+                }
+            }
+
+            // Gestion des fichiers
+            function handleFiles(files) {
+                const newFiles = Array.from(files);
+                selectedFiles = selectedFiles.concat(newFiles);
+                uploadError.classList.add('d-none');
+
+                // Validation des fichiers
+                let validFiles = [];
+                let errors = [];
+
+                newFiles.forEach((file, index) => {
+                    // Vérifier le type
+                    if (!file.type.startsWith('image/')) {
+                        errors.push(`Le fichier "${file.name}" n'est pas une image valide.`);
+                        return;
+                    }
+
+                    // Vérifier la taille (5MB max)
+                    if (file.size > 5 * 1024 * 1024) {
+                        errors.push(`L'image "${file.name}" dépasse la taille maximale de 5MB.`);
+                        return;
+                    }
+
+                    validFiles.push(file);
+
+                    // Créer l'aperçu
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'img-thumbnail';
+                        img.style.width = '100px';
+                        img.style.height = '100px';
+                        img.style.objectFit = 'cover';
+
+                        const div = document.createElement('div');
+                        div.className = 'position-relative preview-item';
+                        div.setAttribute('data-index', selectedFiles.length - newFiles.length + index);
+                        div.appendChild(img);
+
+                        // Badge avec numéro
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-success position-absolute top-0 start-0';
+                        badge.textContent = "Nouveau";
+                        badge.style.transform = 'translate(-5px, -5px)';
+                        div.appendChild(badge);
+
+                        // Bouton supprimer
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0';
+                        removeBtn.innerHTML = '<i class="lni lni-close"></i>';
+                        removeBtn.style.transform = 'translate(5px, -5px)';
+                        removeBtn.style.padding = '2px 6px';
+                        removeBtn.style.fontSize = '10px';
+                        removeBtn.onclick = function() {
+                            removeImage(div.getAttribute('data-index'));
+                        };
+                        div.appendChild(removeBtn);
+
+                        previewContainer.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                if (validFiles.length > 0) {
+                    // Mettre à jour l'input file
+                    const dataTransfer = new DataTransfer();
+                    selectedFiles.forEach(file => dataTransfer.items.add(file));
+                    imageUpload.files = dataTransfer.files;
+                    
+                    imagePreview.classList.remove('d-none');
+                }
+
+                if (errors.length > 0) {
+                    uploadError.textContent = errors.join(' ');
+                    uploadError.classList.remove('d-none');
+                }
+            }
+
+            // Supprimer une image nouvelle
+            function removeImage(index) {
+                selectedFiles.splice(index, 1);
+                
+                // Mettre à jour l'input file
+                const dataTransfer = new DataTransfer();
+                selectedFiles.forEach(file => dataTransfer.items.add(file));
+                imageUpload.files = dataTransfer.files;
+                
+                // Regénérer l'aperçu
+                previewContainer.innerHTML = '';
+                selectedFiles.forEach((file, i) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'img-thumbnail';
+                        img.style.width = '100px';
+                        img.style.height = '100px';
+                        img.style.objectFit = 'cover';
+
+                        const div = document.createElement('div');
+                        div.className = 'position-relative preview-item';
+                        div.setAttribute('data-index', i);
+                        div.appendChild(img);
+
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-success position-absolute top-0 start-0';
+                        badge.textContent = "Nouveau";
+                        badge.style.transform = 'translate(-5px, -5px)';
+                        div.appendChild(badge);
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0';
+                        removeBtn.innerHTML = '<i class="lni lni-close"></i>';
+                        removeBtn.style.transform = 'translate(5px, -5px)';
+                        removeBtn.style.padding = '2px 6px';
+                        removeBtn.style.fontSize = '10px';
+                        removeBtn.onclick = function() {
+                            removeImage(i);
+                        };
+                        div.appendChild(removeBtn);
+
+                        previewContainer.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                if (selectedFiles.length === 0) {
+                    imagePreview.classList.add('d-none');
+                }
+            }
+
+            // Supprimer toutes les nouvelles images
+            window.clearNewImages = function() {
+                selectedFiles = [];
+                imageUpload.value = '';
+                previewContainer.innerHTML = '';
+                imagePreview.classList.add('d-none');
+                uploadError.classList.add('d-none');
+            };
+
+            // Supprimer une image existante
+            window.removeExistingImage = function(imageId) {
+                if (!removedImages.includes(imageId)) {
+                    removedImages.push(imageId);
+                    removedImagesInput.value = removedImages.join(',');
+                    
+                    // Marquer visuellement l'image comme supprimée
+                    event.target.closest('.position-relative').style.opacity = '0.5';
+                    event.target.closest('.position-relative').style.border = '2px solid red';
+                    
+                    // Changer le bouton
+                    event.target.innerHTML = '<i class="lni lni-undo"></i>';
+                    event.target.classList.remove('btn-danger');
+                    event.target.classList.add('btn-warning');
+                    event.target.onclick = function() {
+                        restoreExistingImage(imageId);
+                    };
+                }
+            };
+
+            // Restaurer une image existante
+            window.restoreExistingImage = function(imageId) {
+                const index = removedImages.indexOf(imageId);
+                if (index > -1) {
+                    removedImages.splice(index, 1);
+                    removedImagesInput.value = removedImages.join(',');
+                    
+                    // Restaurer visuellement l'image
+                    event.target.closest('.position-relative').style.opacity = '1';
+                    event.target.closest('.position-relative').style.border = '';
+                    
+                    // Changer le bouton
+                    event.target.innerHTML = '<i class="lni lni-close"></i>';
+                    event.target.classList.remove('btn-warning');
+                    event.target.classList.add('btn-danger');
+                    event.target.onclick = function() {
+                        removeExistingImage(imageId);
+                    };
+                }
+            };
+
+            if (imageUpload) {
+                imageUpload.addEventListener('change', function(e) {
+                    const files = e.target.files;
+                    handleFiles(files);
+                });
+            }
+
+            // Validation des champs numériques
+            const numericFields = ['Vehicule_Annee', 'Vehicule_Prix', 'Vehicule_Caution', 'Vehicule_Penalite'];
+            numericFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('blur', function() {
+                        const value = parseFloat(this.value);
+                        if (isNaN(value) || value < 0) {
+                            this.classList.add('is-invalid');
+                        } else {
+                            this.classList.remove('is-invalid');
+                            this.classList.add('is-valid');
+                        }
+                    });
+                    
+                    // Validation en temps réel
+                    field.addEventListener('input', function() {
+                        const value = this.value;
+                        if (value && !isNaN(value) && parseFloat(value) >= 0) {
+                            this.classList.remove('is-invalid');
+                            this.classList.add('is-valid');
+                        } else {
+                            this.classList.remove('is-valid');
+                        }
+                    });
+                }
+            });
+
+            // Confirmation avant de quitter avec des modifications
+            const form = document.getElementById('vehicleForm');
+            let formChanged = false;
+
+            form.addEventListener('input', function() {
+                formChanged = true;
+            });
+
+            const cancelBtns = document.querySelectorAll('a[href*="Index"], a[href*="Details"]');
+            cancelBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (formChanged && !confirm('Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+
+            // Validation avant soumission
+            form.addEventListener('submit', function(e) {
+                // Vérifier la taille totale des images
+                const totalSize = selectedFiles.reduce((total, file) => total + file.size, 0);
+                if (totalSize > 20 * 1024 * 1024) { // 20MB max total
+                    e.preventDefault();
+                    uploadError.textContent = 'La taille totale des nouvelles images ne doit pas dépasser 20MB.';
+                    uploadError.classList.remove('d-none');
+                    dropArea.scrollIntoView({ behavior: 'smooth' });
+                    return false;
+                }
+                
+                return true;
+            });
+        });
+    </script>
+</div>
+
+<style>
+    .file-upload-area {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 40px 20px;
+        text-align: center;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .file-upload-area:hover {
+        border-color: #4a6cf7;
+        background: #f0f5ff;
+    }
+
+    .preview-item {
+        transition: transform 0.2s ease;
+    }
+
+    .preview-item:hover {
+        transform: scale(1.05);
+    }
+
+    .card-header {
+        border-bottom: 1px solid #e9ecef;
+        padding: 1.5rem 1.5rem 0.75rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-check-input:checked {
+        background-color: #4a6cf7;
+        border-color: #4a6cf7;
+    }
+
+    .form-check-input:focus {
+        border-color: #4a6cf7;
+        box-shadow: 0 0 0 0.25rem rgba(74, 108, 247, 0.25);
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        min-width: 50px;
+        justify-content: center;
+    }
+
+    .is-valid {
+        border-color: #28a745 !important;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .badge {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    
+    .existing-images .img-thumbnail {
+        transition: all 0.3s ease;
+    }
+    
+    .existing-images .btn-danger {
+        opacity: 0.8;
+    }
+    
+    .existing-images .btn-danger:hover {
+        opacity: 1;
+    }
+</style>

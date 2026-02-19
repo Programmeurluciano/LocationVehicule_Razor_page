@@ -1,83 +1,391 @@
 ﻿@page
 @model DotnetLocation.Pages.Vehicules.CreateModel
 
-        @{
-        ViewData["Title"] = "Create";
-        }
-        
-        <h1>Create</h1>
-        
-    <h4>Vehicule</h4>
-    <hr />
-    <div class="row">
-    <div class="col-md-4">
-    <form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Vehicule.CategorieId" class="control-label"></label>
-                <select asp-for="Vehicule.CategorieId" class ="form-control" asp-items="ViewBag.CategorieId" aria-required="true"></select>
-            </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Vehicule.Marque" class="control-label"></label>
-                <input asp-for="Vehicule.Marque" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Marque" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Vehicule.Model" class="control-label"></label>
-                <input asp-for="Vehicule.Model" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Model" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Annee" class="control-label"></label>
-                <input asp-for="Vehicule.Annee" class="form-control" />
-                <span asp-validation-for="Vehicule.Annee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Vehicule.Transmission" class="control-label"></label>
-                <input asp-for="Vehicule.Transmission" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Transmission" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Vehicule.Carburant" class="control-label"></label>
-                <input asp-for="Vehicule.Carburant" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Vehicule.Carburant" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Prix" class="control-label"></label>
-                <input asp-for="Vehicule.Prix" class="form-control" />
-                <span asp-validation-for="Vehicule.Prix" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Caution" class="control-label"></label>
-                <input asp-for="Vehicule.Caution" class="form-control" />
-                <span asp-validation-for="Vehicule.Caution" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Vehicule.Penalite" class="control-label"></label>
-                <input asp-for="Vehicule.Penalite" class="form-control" />
-                <span asp-validation-for="Vehicule.Penalite" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Vehicule.Disponibilite" /> @Html.DisplayNameFor(model => model.Vehicule.Disponibilite)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+@{
+    ViewData["Title"] = "Ajouter un Véhicule";
+}
 
-<div>
-    <a asp-page="Index">Back to List</a>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Ajouter un Véhicule</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                                Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">Véhicules</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Nouveau Véhicule
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <h6 class="mb-3">Formulaire d'ajout de véhicule</h6>
+                <p class="text-sm mb-20">
+                    Remplissez le formulaire ci-dessous pour ajouter un nouveau véhicule à votre parc automobile.
+                </p>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form method="post" enctype="multipart/form-data" id="vehicleForm">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+
+                            <div class="row">
+                                <!-- Catégorie -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.CategorieId" class="form-label fw-500">
+                                            Catégorie <span class="text-danger">*</span>
+                                        </label>
+                                        <select asp-for="Vehicule.CategorieId"
+                                                class="form-select"
+                                                asp-items="ViewBag.CategorieId"
+                                                aria-required="true">
+                                            <option value="">-- Sélectionner une catégorie --</option>
+                                        </select>
+                                        <span asp-validation-for="Vehicule.CategorieId" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Année -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Annee" class="form-label fw-500">Année</label>
+                                        <input asp-for="Vehicule.Annee" class="form-control"
+                                               placeholder="Ex: 2023" type="number" min="1900" max="@DateTime.Now.Year" />
+                                        <span asp-validation-for="Vehicule.Annee" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Marque -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Marque" class="form-label fw-500">
+                                            Marque <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Vehicule.Marque" class="form-control"
+                                               placeholder="Ex: Toyota, Renault, etc." />
+                                        <span asp-validation-for="Vehicule.Marque" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Modèle -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Model" class="form-label fw-500">
+                                            Modèle <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Vehicule.Model" class="form-control"
+                                               placeholder="Ex: Corolla, Clio, etc." />
+                                        <span asp-validation-for="Vehicule.Model" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Transmission -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Transmission" class="form-label fw-500">
+                                            Transmission <span class="text-danger">*</span>
+                                        </label>
+                                        <select asp-for="Vehicule.Transmission" class="form-select">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="Manuelle">Manuelle</option>
+                                            <option value="Automatique">Automatique</option>
+                                        </select>
+                                        <span asp-validation-for="Vehicule.Transmission" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Carburant -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Carburant" class="form-label fw-500">
+                                            Carburant <span class="text-danger">*</span>
+                                        </label>
+                                        <select asp-for="Vehicule.Carburant" class="form-select">
+                                            <option value="">-- Sélectionner --</option>
+                                            <option value="Essence">Essence</option>
+                                            <option value="Diesel">Diesel</option>
+                                            <option value="Électrique">Électrique</option>
+                                            <option value="Hybride">Hybride</option>
+                                        </select>
+                                        <span asp-validation-for="Vehicule.Carburant" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Prix -->
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Prix" class="form-label fw-500">Prix par jour (Ariary)</label>
+                                        <div class="input-group">
+                                            <input asp-for="Vehicule.Prix" class="form-control"
+                                                   placeholder="0.00" type="number" step="0.01" min="0" />
+                                            <span class="input-group-text">Ar</span>
+                                        </div>
+                                        <span asp-validation-for="Vehicule.Prix" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Caution -->
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Caution" class="form-label fw-500">Caution (Ariary)</label>
+                                        <div class="input-group">
+                                            <input asp-for="Vehicule.Caution" class="form-control"
+                                                   placeholder="0.00" type="number" step="0.01" min="0" />
+                                            <span class="input-group-text">Ar</span>
+                                        </div>
+                                        <span asp-validation-for="Vehicule.Caution" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Pénalité -->
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group">
+                                        <label asp-for="Vehicule.Penalite" class="form-label fw-500">Pénalité par jour (Ariary)</label>
+                                        <div class="input-group">
+                                            <input asp-for="Vehicule.Penalite" class="form-control"
+                                                   placeholder="0.00" type="number" step="0.01" min="0" />
+                                            <span class="input-group-text">Ar</span>
+                                        </div>
+                                        <span asp-validation-for="Vehicule.Penalite" class="text-danger text-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upload images multiples -->
+                            <div class="mb-4">
+                                <div class="form-group">
+                                    <label class="form-label fw-500">
+                                        Images du véhicule <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="file-upload-area">
+                                        <input type="file"
+                                               name="Images"
+                                               multiple
+                                               accept="image/*"
+                                               class="form-control"
+                                               id="imageUpload" />
+                                        <small class="form-text text-muted">
+                                            Vous pouvez sélectionner plusieurs images. Formats acceptés : JPG, PNG, GIF. Taille max : 5MB par image.
+                                        </small>
+                                    </div>
+                                    <div id="imagePreview" class="mt-3 d-none">
+                                        <h6 class="mb-2">Aperçu des images :</h6>
+                                        <div class="image-preview-container d-flex flex-wrap gap-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Disponibilité -->
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" asp-for="Vehicule.Disponibilite" checked />
+                                    <label class="form-check-label fw-500" asp-for="Vehicule.Disponibilite">
+                                        Véhicule disponible immédiatement
+                                    </label>
+                                </div>
+                                <small class="form-text text-muted">
+                                    Décochez cette case si le véhicule n'est pas disponible à la location.
+                                </small>
+                            </div>
+
+                            <!-- Boutons -->
+                            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                    <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                </a>
+                                <button type="submit" class="main-btn primary-btn btn-hover">
+                                    <i class="lni lni-checkmark-circle me-2"></i> Ajouter le véhicule
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus sur le premier champ
+            document.getElementById('Vehicule_CategorieId').focus();
+
+            // Aperçu des images
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewContainer = document.querySelector('.image-preview-container');
+
+            if (imageUpload) {
+                imageUpload.addEventListener('change', function(e) {
+                    const files = e.target.files;
+                    previewContainer.innerHTML = '';
+
+                    if (files.length > 0) {
+                        imagePreview.classList.remove('d-none');
+
+                        for (let i = 0; i < files.length; i++) {
+                            const file = files[i];
+                            if (file.type.startsWith('image/')) {
+                                const reader = new FileReader();
+
+                                reader.onload = function(e) {
+                                    const img = document.createElement('img');
+                                    img.src = e.target.result;
+                                    img.className = 'img-thumbnail';
+                                    img.style.width = '100px';
+                                    img.style.height = '100px';
+                                    img.style.objectFit = 'cover';
+
+                                    const div = document.createElement('div');
+                                    div.className = 'position-relative';
+                                    div.appendChild(img);
+
+                                    // Badge avec numéro
+                                    const badge = document.createElement('span');
+                                    badge.className = 'badge bg-primary position-absolute top-0 start-0';
+                                    badge.textContent = (i + 1);
+                                    badge.style.transform = 'translate(-5px, -5px)';
+                                    div.appendChild(badge);
+
+                                    previewContainer.appendChild(div);
+                                };
+
+                                reader.readAsDataURL(file);
+                            }
+                        }
+                    } else {
+                        imagePreview.classList.add('d-none');
+                    }
+                });
+            }
+
+            // Validation des champs numériques
+            const numericFields = ['Vehicule_Annee', 'Vehicule_Prix', 'Vehicule_Caution', 'Vehicule_Penalite'];
+            numericFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('blur', function() {
+                        const value = parseFloat(this.value);
+                        if (isNaN(value) || value < 0) {
+                            this.classList.add('is-invalid');
+                        } else {
+                            this.classList.remove('is-invalid');
+                        }
+                    });
+                }
+            });
+
+            // Confirmation avant de quitter avec des modifications
+            const form = document.getElementById('vehicleForm');
+            let formChanged = false;
+
+            form.addEventListener('input', function() {
+                formChanged = true;
+            });
+
+            const cancelBtn = document.querySelector('a[href*="Index"]');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function(e) {
+                    if (formChanged && !confirm('Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?')) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
 }
+
+<style>
+    .file-upload-area {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+        .file-upload-area:hover {
+            border-color: #4a6cf7;
+            background: #f0f5ff;
+        }
+
+    .info-card {
+        position: sticky;
+        top: 20px;
+    }
+
+    .stats-summary {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+    .stat-label {
+        color: #6c757d;
+    }
+
+    .stat-value {
+        font-weight: 600;
+        color: #4a6cf7;
+    }
+
+    .form-check-input:checked {
+        background-color: #4a6cf7;
+        border-color: #4a6cf7;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+    }
+</style>

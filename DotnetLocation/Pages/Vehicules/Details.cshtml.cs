@@ -28,7 +28,9 @@ namespace DotnetLocation.Pages.Vehicules
                 return NotFound();
             }
 
-            var vehicule = await _context.Vehicules.FirstOrDefaultAsync(m => m.Id == id);
+            var vehicule = await _context.Vehicules
+                 .Include(v => v.Images)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (vehicule is not null)
             {

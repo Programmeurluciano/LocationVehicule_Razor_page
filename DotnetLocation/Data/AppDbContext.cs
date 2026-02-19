@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using DotnetLocation.Models;
+﻿using DotnetLocation.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace DotnetLocation.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
        : base(options)
@@ -14,7 +16,7 @@ namespace DotnetLocation.Data
         public DbSet<Categorie> Categories { get; set; }
         public DbSet<Vehicule> Vehicules { get; set; }
         public DbSet<VehiculeImage> VehiculeImages { get; set; }
-
+        
         public DbSet<Client> Clients { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
 
@@ -55,7 +57,7 @@ namespace DotnetLocation.Data
 
             // Vehicule -> Reservation
             modelBuilder.Entity<Vehicule>()
-                .HasMany<Reservation>()
+                .HasMany(c => c.Reservations)
                 .WithOne(r => r.Vehicule)
                 .HasForeignKey(r => r.VehiculeId)
                 .OnDelete(DeleteBehavior.Restrict);

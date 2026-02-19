@@ -23,6 +23,7 @@ namespace DotnetLocation.Pages.Reservations
 
         public async Task OnGetAsync()
         {
+
             Reservation = await _context.Reservations
                 .Include(r => r.Client)
                 .Include(r => r.Vehicule).ToListAsync();

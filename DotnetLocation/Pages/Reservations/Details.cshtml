@@ -2,54 +2,662 @@
 @model DotnetLocation.Pages.Reservations.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Détails de la Réservation";
 }
 
-<h1>Details</h1>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Détails de la Réservation</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                               Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">
+                               Réservations
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                           Détails
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
 
-<div>
-    <h4>Reservation</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.Client)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.Client.Contact)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.Vehicule)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.Vehicule.Carburant)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.DateDebut)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.DateDebut)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.DateFin)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.DateFin)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.DateRetourVehicule)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.DateRetourVehicule)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Reservation.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Reservation.Status)
-        </dd>
-    </dl>
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Informations détaillées de la réservation</h6>
+                        <p class="text-sm mb-0">
+                            Réservation N° <strong>@Model.Reservation?.Id</strong>
+                        </p>
+                    </div>
+                    @* <div class="badge @GetStatusBadgeClass(Models.Enums.ReservationStatus    Model.Reservation?.Status)"> *@
+                        <div >
+                        @* <i class="@GetStatusIcon(Model.Reservation?.Status) me-1"></i> *@
+                        @Model.Reservation?.Status
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <!-- Informations principales -->
+                            <div class="info-card mb-4">
+                                <h6 class="mb-3"><i class="lni lni-list me-2"></i> Informations de la réservation</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4 fw-500 text-muted mb-2">
+                                                Client
+                                            </dt>
+                                            <dd class="col-sm-8 mb-2">
+                                                <div class="detail-value">
+                                                    <strong>@Model.Reservation?.Client?.Nom</strong>
+                                                    <div class="text-sm text-muted">
+                                                        <i class="lni lni-phone me-1"></i> @Model.Reservation?.Client?.Contact
+                                                    </div>
+                                                    @if (!string.IsNullOrEmpty(Model.Reservation?.Client?.Email))
+                                                    {
+                                                        <div class="text-sm text-muted">
+                                                            <i class="lni lni-envelope me-1"></i> @Model.Reservation?.Client?.Email
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-4 fw-500 text-muted mb-2">
+                                                Date début
+                                            </dt>
+                                            <dd class="col-sm-8 mb-2">
+                                                <div class="detail-value">
+                                                    @Model.Reservation?.DateDebut.ToString("dd/MM/yyyy HH:mm")
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4 fw-500 text-muted mb-2">
+                                                Véhicule
+                                            </dt>
+                                            <dd class="col-sm-8 mb-2">
+                                                <div class="detail-value">
+                                                    <div class="vehicle-info">
+                                                        <strong>@Model.Reservation?.Vehicule?.Marque @Model.Reservation?.Vehicule?.Model</strong>
+                                                        <div class="vehicle-details text-sm">
+                                                            <span class="badge bg-info me-2">@Model.Reservation?.Vehicule?.Categorie?.Nom</span>
+                                                            <span class=" me-2">@Model.Reservation?.Vehicule?.Carburant</span> <br />
+                                                            <span class="">@Model.Reservation?.Vehicule?.Annee</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-4 fw-500 text-muted mb-2">
+                                                <i class="lni lni-calendar me-1"></i> Date fin
+                                            </dt>
+                                            <dd class="col-sm-8 mb-2">
+                                                <div class="detail-value">
+                                                    <i class="lni lni-flag text-success me-2"></i>
+                                                    @Model.Reservation?.DateFin.ToString("dd/MM/yyyy HH:mm")
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-4 fw-500 text-muted mb-2">
+                                                <i class="lni lni-timer me-1"></i> Durée
+                                            </dt>
+                                            <dd class="col-sm-8 mb-2">
+                                                <div class="detail-value">
+                                                    @{
+                                                        var duration = Model.Reservation?.DateFin - Model.Reservation?.DateDebut;
+                                                        var days = duration?.Days ?? 0;
+                                                        var hours = duration?.Hours ?? 0;
+                                                    }
+                                                    <span class="badge bg-primary">@days jours @hours heures</span>
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dates et statut -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-card">
+                                        <h6 class="mb-3">Dates importantes</h6>
+                                        <div class="timeline">
+                                            <div class="timeline-item @(IsPastDate(Model.Reservation?.DateDebut) ? "completed" : "upcoming")">
+                                                <div class="timeline-marker @(IsPastDate(Model.Reservation?.DateDebut) ? "bg-success" : "bg-info")"></div>
+                                                <div class="timeline-content">
+                                                    <h6 class="timeline-title">Début de location</h6>
+                                                    <p class="timeline-date">@Model.Reservation?.DateDebut.ToString("dd/MM/yyyy HH:mm")</p>
+                                                    <span class="timeline-status">@(IsPastDate(Model.Reservation?.DateDebut) ? "Terminé" : "À venir")</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="timeline-item @(IsPastDate(Model.Reservation?.DateFin) ? "completed" : "upcoming")">
+                                                <div class="timeline-marker @(IsPastDate(Model.Reservation?.DateFin) ? "bg-success" : "bg-warning")"></div>
+                                                <div class="timeline-content">
+                                                    <h6 class="timeline-title">Fin prévue</h6>
+                                                    <p class="timeline-date">@Model.Reservation?.DateFin.ToString("dd/MM/yyyy HH:mm")</p>
+                                                    <span class="timeline-status">@(IsPastDate(Model.Reservation?.DateFin) ? "Terminé" : "À venir")</span>
+                                                </div>
+                                            </div>
+
+                                            @if (Model.Reservation?.DateRetourVehicule.HasValue == true)
+                                            {
+                                                <div class="timeline-item completed">
+                                                    <div class="timeline-marker bg-primary"></div>
+                                                    <div class="timeline-content">
+                                                        <h6 class="timeline-title">Retour effectif</h6>
+                                                        <p class="timeline-date">@Model.Reservation.DateRetourVehicule.Value.ToString("dd/MM/yyyy HH:mm")</p>
+                                                        <span class="timeline-status">Terminé</span>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="timeline-item upcoming">
+                                                    <div class="timeline-marker bg-secondary"></div>
+                                                    <div class="timeline-content">
+                                                        <h6 class="timeline-title">Retour effectif</h6>
+                                                        <p class="timeline-date">En attente</p>
+                                                        <span class="timeline-status">À venir</span>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="info-card">
+                                        <h6 class="mb-3"><i class="lni lni-money-protection me-2"></i> Informations tarifaires</h6>
+                                        @{
+                                            var dailyPrice = Model.Reservation?.Vehicule?.Prix ?? 0;
+                                            var caution = Model.Reservation?.Vehicule?.Caution ?? 0;
+                                            var penalty = Model.Reservation?.Vehicule?.Penalite ?? 0;
+                                            var totalDays = days + (hours > 0 ? 1 : 0); // Arrondi au jour supérieur
+                                            var totalPrice = totalDays * dailyPrice;
+                                            var isLate = Model.Reservation?.DateRetourVehicule > Model.Reservation?.DateFin;
+                                            var lateDays = isLate ? ((Model.Reservation!.DateRetourVehicule!.Value - Model.Reservation.DateFin).Days) : 0;
+                                            var latePenalty = lateDays * penalty;
+                                        }
+
+                                        <div class="price-summary">
+                                            <div class="price-item">
+                                                <span class="price-label">Prix journalier :</span>
+                                                <span class="price-value">@dailyPrice.ToString("N0") Ar</span>
+                                            </div>
+                                            <div class="price-item">
+                                                <span class="price-label">Durée :</span>
+                                                <span class="price-value">@days jours @hours heures</span>
+                                            </div>
+                                            <div class="price-item total">
+                                                <span class="price-label">Total location :</span>
+                                                <span class="price-value">@totalPrice.ToString("N0") Ar</span>
+                                            </div>
+                                            <div class="price-item">
+                                                <span class="price-label">Caution :</span>
+                                                <span class="price-value">@caution.ToString("N0") Ar</span>
+                                            </div>
+
+                                            @if (isLate && lateDays > 0)
+                                            {
+                                                <div class="price-item penalty">
+                                                    <span class="price-label">Retard (@lateDays jours) :</span>
+                                                    <span class="price-value">@latePenalty.ToString("N0") Ar</span>
+                                                </div>
+                                                <div class="price-item grand-total">
+                                                    <span class="price-label">Total à payer :</span>
+                                                    <span class="price-value">@((totalPrice + latePenalty).ToString("N0")) Ar</span>
+                                                </div>
+                                            }
+
+                                            <div class="price-item">
+                                                <span class="price-label">Caution à rendre :</span>
+                                                <span class="price-value">@((caution - latePenalty).ToString("N0")) Ar</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <!-- Carte d'actions -->
+                            <div class="card-style actions-card mb-4">
+                                <h6 class="mb-3"><i class="lni lni-control-panel me-2"></i> Actions</h6>
+                                <div class="d-grid gap-2">
+                                    <a asp-page="./Edit" asp-route-id="@Model.Reservation?.Id" class="main-btn primary-btn btn-hover">
+                                        <i class="lni lni-pencil me-2"></i> Modifier
+                                    </a>
+                                    <a asp-page="./Delete" asp-route-id="@Model.Reservation?.Id" class="main-btn danger-btn btn-hover">
+                                        <i class="lni lni-trash-can me-2"></i> Supprimer
+                                    </a>
+
+                                    <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                        <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <!-- Informations rapides -->
+                            <div class="card-style info-card">
+                                <h6 class="mb-3"><i class="lni lni-bulb me-2"></i> Informations rapides</h6>
+                                <ul class="list-unstyled text-sm">
+                                    <li class="mb-2">
+                                        <i class="lni lni-calendar text-primary me-2"></i>
+                                        Durée : @days jours @hours heures
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="lni lni-money-protection text-success me-2"></i>
+                                        Total : @totalPrice.ToString("N0") Ar
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="lni lni-shield text-warning me-2"></i>
+                                        Caution : @caution.ToString("N0") Ar
+                                    </li>
+                                    @if (isLate && lateDays > 0)
+                                    {
+                                        <li class="mb-2">
+                                            <i class="lni lni-warning text-danger me-2"></i>
+                                            Retard : @lateDays jours
+                                        </li>
+                                    }
+                                    <li>
+                                        <i class="lni lni-timer text-info me-2"></i>
+                                        Statut : @Model.Reservation?.Status
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Reservation.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
+@functions {
+    string GetStatusBadgeClass(string? status)
+    {
+        return status switch
+        {
+            "En attente" => "bg-warning",
+            "Confirmée" => "bg-info",
+            "En cours" => "bg-success",
+            "Terminée" => "bg-secondary",
+            "Annulée" => "bg-danger",
+            _ => "bg-light"
+        };
+    }
+
+    string GetStatusIcon(string? status)
+    {
+        return status switch
+        {
+            "En attente" => "lni lni-timer",
+            "Confirmée" => "lni lni-checkmark-circle",
+            "En cours" => "lni lni-car",
+            "Terminée" => "lni lni-flag",
+            "Annulée" => "lni lni-close",
+            _ => "lni lni-question-circle"
+        };
+    }
+
+    bool IsPastDate(DateTime? date)
+    {
+        if (!date.HasValue) return false;
+        return date.Value < DateTime.Now;
+    }
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copier l'ID de la réservation
+            const copyReservationId = () => {
+                const reservationId = '@Model.Reservation?.Id';
+                navigator.clipboard.writeText(reservationId).then(() => {
+                    showToast('ID copié : ' + reservationId, 'success');
+                });
+            };
+
+            // Ajouter un bouton de copie d'ID
+            const idElement = document.querySelector('code');
+            if (idElement) {
+                idElement.style.cursor = 'pointer';
+                idElement.title = 'Cliquer pour copier l\'ID';
+                idElement.addEventListener('click', copyReservationId);
+            }
+
+            // Vérifier si la réservation est en retard
+            checkIfOverdue();
+        });
+
+        function checkIfOverdue() {
+            const statusElement = document.querySelector('.card-header .badge');
+            const dateFin = new Date('@Model.Reservation?.DateFin.ToString("o")');
+            const now = new Date();
+
+            if (dateFin < now && '@Model.Reservation?.Status' === 'En cours') {
+                // Ajouter une alerte visuelle
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                alertDiv.innerHTML = `
+                    <i class="lni lni-warning me-2"></i>
+                    <strong>Attention :</strong> Cette réservation est en retard de ${Math.floor((now - dateFin) / (1000 * 60 * 60 * 24))} jours.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+
+                const cardBody = document.querySelector('.card-body');
+                if (cardBody) {
+                    cardBody.insertBefore(alertDiv, cardBody.firstChild);
+                }
+
+                // Mettre à jour le badge
+                if (statusElement) {
+                    statusElement.className = 'badge bg-danger';
+                    statusElement.innerHTML = '<i class="lni lni-warning me-1"></i> En retard';
+                }
+            }
+        }
+
+        function confirmReservation() {
+            if (confirm('Confirmer cette réservation ? Cette action est définitive.')) {
+                // Simuler la confirmation
+                showToast('Réservation confirmée avec succès', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+        }
+
+        function markAsReturned() {
+            const currentDate = new Date().toISOString().slice(0, 16);
+            const returnDate = prompt('Entrez la date et heure de retour (format: AAAA-MM-JJTHH:MM) :', currentDate);
+
+            if (returnDate) {
+                // Simuler le marquage comme retourné
+                showToast('Véhicule marqué comme retourné', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+        }
+
+        function cancelReservation() {
+            const reason = prompt('Veuillez indiquer la raison de l\'annulation :');
+            if (reason) {
+                if (confirm(`Annuler la réservation pour la raison : "${reason}" ?`)) {
+                    // Simuler l'annulation
+                    showToast('Réservation annulée', 'warning');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
+            }
+        }
+
+        function generateContract() {
+            showToast('Génération du contrat en cours...', 'info');
+            // Implémentez la génération du contrat PDF ici
+            setTimeout(() => {
+                showToast('Contrat généré avec succès', 'success');
+            }, 2000);
+        }
+
+        function printReservation() {
+            window.print();
+        }
+
+        function addNote() {
+            const note = prompt('Ajouter une note à cette réservation :');
+            if (note) {
+                showToast('Note ajoutée avec succès', 'success');
+                // Implémentez l'ajout de la note ici
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            // Créer un toast Bootstrap
+            const toastHtml = `
+                <div class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+
+            const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+            toastContainer.innerHTML += toastHtml;
+
+            // Afficher le toast
+            const toastEl = toastContainer.lastElementChild;
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            document.body.appendChild(container);
+            return container;
+        }
+    </script>
+}
+
+<style>
+    .detail-value {
+        padding: 8px 12px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #4a6cf7;
+    }
+
+    .actions-card {
+        position: sticky;
+        top: 20px;
+    }
+
+    .info-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .vehicle-details {
+        margin-top: 5px;
+    }
+
+        .vehicle-details .badge {
+            font-size: 10px;
+            padding: 3px 6px;
+            margin-top: 2px;
+        }
+
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: -24px;
+        top: 5px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 3px solid white;
+        z-index: 1;
+    }
+
+    .timeline-content {
+        padding: 5px 0;
+    }
+
+    .timeline-title {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .timeline-date {
+        font-size: 12px;
+        color: #6c757d;
+        margin: 2px 0;
+    }
+
+    .timeline-status {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background: #e9ecef;
+    }
+
+    .completed .timeline-status {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .upcoming .timeline-status {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .price-summary {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+
+    .price-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px dashed #dee2e6;
+    }
+
+        .price-item:last-child {
+            border-bottom: none;
+        }
+
+        .price-item.total {
+            border-top: 2px solid #4a6cf7;
+            border-bottom: 2px solid #4a6cf7;
+            font-weight: 600;
+            margin-top: 5px;
+            padding-top: 10px;
+        }
+
+        .price-item.penalty {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .price-item.grand-total {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #4a6cf7;
+            margin-top: 10px;
+        }
+
+    .price-label {
+        color: #6c757d;
+    }
+
+    .price-value {
+        font-weight: 600;
+        color: #2d3748;
+    }
+
+    .qr-code-placeholder {
+        border: 2px dashed #dee2e6;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 5px 10px;
+        font-weight: 500;
+    }
+
+    code {
+        background: #2d3748;
+        color: #81e6d9;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+        code:hover {
+            background: #4a5568;
+        }
+
+    .progress {
+        border-radius: 5px;
+    }
+
+    .progress-bar {
+        border-radius: 5px;
+    }
+
+    table.table-sm th,
+    table.table-sm td {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .toast-container {
+        z-index: 9999;
+    }
+</style>

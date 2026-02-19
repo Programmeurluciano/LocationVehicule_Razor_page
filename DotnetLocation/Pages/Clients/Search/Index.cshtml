@@ -1,0 +1,506 @@
+﻿@page
+@model DotnetLocation.Pages.Clients.Search.IndexModel
+@{
+    ViewData["Title"] = "Recherche Clients";
+}
+
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Recherche Clients</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                                Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="/Clients/Index">
+                                Clients
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Recherche
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header">
+                    <h6 class="mb-1">Recherche de clients</h6>
+                    <p class="text-sm mb-0">
+                        Recherchez des clients par nom, prénom ou email
+                    </p>
+                </div>
+
+                <div class="card-body">
+                    <!-- Barre de recherche -->
+                    <form method="get" class="search-form mb-4">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="lni lni-search-alt text-muted"></i>
+                                    </span>
+                                    <input type="text"
+                                           name="SearchTerm"
+                                           value="@Model.SearchTerm"
+                                           class="form-control border-start-0"
+                                           placeholder="Rechercher par nom, prénom ou email..." />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="main-btn primary-btn w-100">
+                                    <i class="lni lni-search me-2"></i> Rechercher
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+                    {
+                        <!-- Résumé de la recherche -->
+                        <div class="results-summary mb-4">
+                            <div class="alert alert-light border-0 bg-light d-flex align-items-center">
+                                <i class="lni lni-stats-up me-3 text-primary" style="font-size: 1.5rem;"></i>
+                                <div>
+                                    <strong>@Model.TotalResults</strong> client(s) trouvé(s) pour
+                                    "<strong>@Model.SearchTerm</strong>"
+                                </div>
+                                <a href="?SearchTerm=" class="ms-auto text-decoration-none">
+                                    <i class="lni lni-close"></i> Effacer
+                                </a>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Table de résultats -->
+                    <div class="table-wrapper table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 80px;">ID</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th class="text-center" style="width: 120px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var client in Model.Clients)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <span class="badge bg-light text-dark">#@client.Id</span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-sm bg-primary-light me-2">
+                                                    <i class="lni lni-user"></i>
+                                                </div>
+                                                <strong>@client.Nom</strong>
+                                            </div>
+                                        </td>
+                                        <td>@client.Prenom</td>
+                                        <td>
+                                            <a href="mailto:@client.Email" class="text-primary">
+                                                <i class="lni lni-envelope me-1"></i>@client.Email
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="tel:@client.Contact" class="text-success">
+                                                <i class="lni lni-phone me-1"></i>@client.Contact
+                                            </a>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="action-buttons">
+                                                <a asp-page="/Clients/Details"
+                                                   asp-route-id="@client.Id"
+                                                   class="action-btn view-btn"
+                                                   title="Voir détails">
+                                                    <i class="lni lni-eye"></i>
+                                                </a>
+                                                <a asp-page="/Clients/Edit"
+                                                   asp-route-id="@client.Id"
+                                                   class="action-btn edit-btn"
+                                                   title="Modifier">
+                                                    <i class="lni lni-pencil"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!Model.Clients.Any())
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="lni lni-users"></i>
+                                                </div>
+                                                <h6 class="mt-3">Aucun client trouvé</h6>
+                                                @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+                                                {
+                                                    <p class="text-muted">
+                                                        Aucun client ne correspond à votre recherche
+                                                    </p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-muted">
+                                                        Effectuez une recherche pour trouver des clients
+                                                    </p>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    @if (Model.TotalResults > 0)
+                    {
+                        var totalPages = (int)Math.Ceiling((double)Model.TotalResults / Model.PageSize);
+
+                        <div class="pagination-wrapper mt-4 d-flex justify-content-between align-items-center">
+                            <div class="pagination-info text-muted">
+                                Page @Model.PageNumber sur @totalPages
+                                (@(((Model.PageNumber - 1) * Model.PageSize) + 1) -
+                                @Math.Min(Model.PageNumber * Model.PageSize, Model.TotalResults)
+                                sur @Model.TotalResults clients)
+                            </div>
+
+                            <nav aria-label="Navigation des pages">
+                                <ul class="pagination">
+                                    <!-- Bouton Précédent -->
+                                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                                        <a class="page-link"
+                                           href="?SearchTerm=@Model.SearchTerm&Page=@(Model.PageNumber - 1)"
+                                           aria-label="Précédent">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Pages -->
+                                    @{
+                                        var startPage = Math.Max(1, Model.PageNumber - 2);
+                                        var endPage = Math.Min(totalPages, startPage + 4);
+                                        startPage = Math.Max(1, endPage - 4);
+                                    }
+
+                                    @if (startPage > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link" href="?SearchTerm=@Model.SearchTerm&Page=1">1</a>
+                                        </li>
+                                        @if (startPage > 2)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                    }
+
+                                    @for (int i = startPage; i <= endPage; i++)
+                                    {
+                                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                            <a class="page-link"
+                                               href="?SearchTerm=@Model.SearchTerm&Page=@i">@i</a>
+                                        </li>
+                                    }
+
+                                    @if (endPage < totalPages)
+                                    {
+                                        @if (endPage < totalPages - 1)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="?SearchTerm=@Model.SearchTerm&Page=@totalPages">@totalPages</a>
+                                        </li>
+                                    }
+
+                                    <!-- Bouton Suivant -->
+                                    <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                                        <a class="page-link"
+                                           href="?SearchTerm=@Model.SearchTerm&Page=@(Model.PageNumber + 1)"
+                                           aria-label="Suivant">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-submit après saisie (optionnel)
+            const searchInput = document.querySelector('input[name="SearchTerm"]');
+            const searchForm = document.querySelector('.search-form');
+
+            if (searchInput && searchForm) {
+                let timeout = null;
+                searchInput.addEventListener('keyup', function(e) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            searchForm.submit();
+                        }
+                    }, 500);
+                });
+            }
+        });
+    </script>
+}
+
+<style>
+    /* En-tête de page */
+    .title-wrapper {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Avatars */
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .bg-primary-light {
+        background: rgba(74, 108, 247, 0.1);
+        color: #4a6cf7;
+    }
+
+    /* Table */
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+    /* Badges */
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+        font-weight: 500;
+    }
+
+    /* Boutons d'action */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .view-btn {
+        background: rgba(74, 108, 247, 0.1);
+        color: #4a6cf7;
+    }
+
+        .view-btn:hover {
+            background: #4a6cf7;
+            color: white;
+        }
+
+    .edit-btn {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+        .edit-btn:hover {
+            background: #28a745;
+            color: white;
+        }
+
+    /* État vide */
+    .empty-state {
+        padding: 3rem 1rem;
+    }
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 2rem;
+        color: #dee2e6;
+    }
+
+    /* Pagination */
+    .pagination {
+        margin-bottom: 0;
+        gap: 0.25rem;
+    }
+
+    .page-link {
+        border: 1px solid #dee2e6;
+        color: #4a6cf7;
+        border-radius: 8px !important;
+        margin: 0 2px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+        .page-link:hover {
+            background: #e9ecef;
+            border-color: #4a6cf7;
+            color: #4a6cf7;
+        }
+
+    .page-item.active .page-link {
+        background: #4a6cf7;
+        border-color: #4a6cf7;
+        color: white;
+    }
+
+    .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background: #f8f9fa;
+        border-color: #dee2e6;
+    }
+
+    /* Alert */
+    .alert-light {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1rem;
+    }
+
+    /* Liens */
+    a {
+        text-decoration: none;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    /* Boutons principaux */
+    .main-btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        border: 1px solid transparent;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .primary-btn {
+        background: #4a6cf7;
+        color: #fff;
+    }
+
+        .primary-btn:hover {
+            background: #3a56d4;
+            color: #fff;
+        }
+
+    /* Formulaires */
+    .input-group-text {
+        border-radius: 0.5rem 0 0 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+
+    .form-control {
+        border-radius: 0 0.5rem 0.5rem 0;
+        border: 1px solid #dee2e6;
+        padding: 0.625rem 1rem;
+    }
+
+        .form-control:focus {
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
+        }
+
+    /* Utilitaires */
+    .text-primary {
+        color: #4a6cf7 !important;
+    }
+
+    .text-success {
+        color: #28a745 !important;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+
+    .text-muted {
+        color: #718096 !important;
+    }
+</style>

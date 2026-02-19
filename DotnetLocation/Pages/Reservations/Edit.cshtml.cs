@@ -1,23 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DotnetLocation.Data;
+using DotnetLocation.Models;
+using DotnetLocation.Models.Enums;
+using Elastic.Clients.Elasticsearch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DotnetLocation.Data;
-using DotnetLocation.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DotnetLocation.Pages.Reservations
 {
     public class EditModel : PageModel
     {
-        private readonly DotnetLocation.Data.AppDbContext _context;
+        private readonly AppDbContext _context;
+        private readonly ElasticsearchClient _elastic;
 
-        public EditModel(DotnetLocation.Data.AppDbContext context)
+        public EditModel(AppDbContext context, ElasticsearchClient elastic)
         {
             _context = context;
+            _elastic = elastic;
         }
 
         [BindProperty]
@@ -26,46 +29,80 @@ namespace DotnetLocation.Pages.Reservations
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var reservation =  await _context.Reservations.FirstOrDefaultAsync(m => m.Id == id);
-            if (reservation == null)
-            {
+            Reservation = await _context.Reservations
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (Reservation == null)
                 return NotFound();
-            }
-            Reservation = reservation;
-           ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Contact");
-           ViewData["VehiculeId"] = new SelectList(_context.Vehicules, "Id", "Carburant");
+
+            // 🔹 CLIENT : Nom + Prénom + Email
+            ViewData["ClientId"] = new SelectList(
+                _context.Clients.Select(c => new
+                {
+                    c.Id,
+                    Display = c.Nom + " " + c.Prenom + " (" + c.Email + ")"
+                }),
+                "Id",
+                "Display",
+                Reservation.ClientId
+            );
+
+            // 🔹 VEHICULE : Marque + Modèle
+            ViewData["VehiculeId"] = new SelectList(
+                _context.Vehicules.Select(v => new
+                {
+                    v.Id,
+                    Display = v.Marque + " " + v.Model
+                }),
+                "Id",
+                "Display",
+                Reservation.VehiculeId
+            );
+
+            // 🔹 STATUS : Enum lisible
+            ViewData["StatusList"] = new SelectList(
+                Enum.GetValues(typeof(ReservationStatus))
+                    .Cast<ReservationStatus>()
+                    .Select(s => new
+                    {
+                        Value = (int)s,
+                        Text = s.ToString()
+                    }),
+                "Value",
+                "Text",
+                (int)Reservation.Status
+            );
+
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             _context.Attach(Reservation).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+
+                // 🔒 ELASTICSEARCH : INCHANGÉ
+                var esResponse = await _elastic.UpdateAsync<Reservation, Reservation>(
+                    index: "reservations",
+                    id: Reservation.Id.ToString(),
+                    u => u.Doc(Reservation).DocAsUpsert(true)
+                );
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!ReservationExists(Reservation.Id))
-                {
                     return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return RedirectToPage("./Index");

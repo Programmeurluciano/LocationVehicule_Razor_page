@@ -1,4 +1,5 @@
 ﻿using DotnetLocation.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -37,12 +38,15 @@ namespace DotnetLocation.Models
         // Ex: Essence, Diesel, Électrique
 
         [Range(0, double.MaxValue)]
+        [Precision(11, 2)]
         public decimal Prix { get; set; }
 
         [Range(0, double.MaxValue)]
+        [Precision(11, 2)]
         public decimal Caution { get; set; }
 
         [Range(0, double.MaxValue)]
+        [Precision(11, 2)]
         public decimal Penalite { get; set; }
 
         //  Disponibilité
@@ -50,5 +54,7 @@ namespace DotnetLocation.Models
 
         //  Images
         public ICollection<VehiculeImage> Images { get; set; } = new List<VehiculeImage>();
+
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

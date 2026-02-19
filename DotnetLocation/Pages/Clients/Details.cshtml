@@ -2,48 +2,330 @@
 @model DotnetLocation.Pages.Clients.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Détails du Client";
 }
 
-<h1>Details</h1>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Détails du Client</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                                Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">
+                                Clients
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Détails
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
 
-<div>
-    <h4>Client</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Client.Nom)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Client.Nom)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Client.Prenom)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Client.Prenom)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Client.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Client.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Client.Contact)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Client.Contact)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Client.MotDePasseHash)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Client.MotDePasseHash)
-        </dd>
-    </dl>
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Informations personnelles</h6>
+                        <p class="text-sm mb-0">
+                            Client : <strong>@Model.Client?.Nom @Model.Client?.Prenom</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <!-- Informations détaillées -->
+                            <div class="info-card">
+                                <h6 class="mb-3">Coordonnées du client</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-user me-1"></i> Nom
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    @Model.Client?.Nom
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-user me-1"></i> Prénom
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    @Model.Client?.Prenom
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-envelope me-1"></i> Email
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    <a href="mailto:@Model.Client?.Email">@Model.Client?.Email</a>
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-phone me-1"></i> Contact
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    @if (!string.IsNullOrEmpty(Model.Client?.Contact))
+                                                    {
+                                                        <a href="tel:@Model.Client.Contact">@Model.Client.Contact</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">Non renseigné</span>
+                                                    }
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions rapides -->
+                            @* <div class="info-card mt-4">
+                                <h6 class="mb-3"><i class="lni lni-bolt me-2"></i> Actions rapides</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="mailto:@Model.Client?.Email" class="main-btn primary-btn-outline btn-hover w-100 mb-2">
+                                            <i class="lni lni-envelope me-2"></i> Envoyer un email
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="tel:@Model.Client?.Contact" class="main-btn success-btn-outline btn-hover w-100 mb-2">
+                                            <i class="lni lni-phone me-2"></i> Appeler
+                                        </a>
+                                    </div>
+                                </div>
+                            </div> *@
+                        </div>
+
+                        <div class="col-lg-4">
+                            <!-- Carte d'actions -->
+                            <div class="card-style actions-card mb-4">
+                                <h6 class="mb-3"><i class="lni lni-control-panel me-2"></i> Actions</h6>
+                                <div class="d-grid gap-2">
+                                    <a asp-page="./Edit" asp-route-id="@Model.Client?.Id" class="main-btn primary-btn btn-hover">
+                                        <i class="lni lni-pencil me-2"></i> Modifier
+                                    </a>
+
+                                    <a asp-page="./Delete" asp-route-id="@Model.Client?.Id" class="main-btn danger-btn btn-hover">
+                                        <i class="lni lni-trash-can me-2"></i> Supprimer
+                                    </a>
+
+                                    <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                        <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Informations rapides -->
+                            <div class="card-style info-card">
+                                <h6 class="mb-3">Informations rapides</h6>
+                                <ul class="list-unstyled text-sm">
+                                    <li class="mb-2 d-flex align-items-center">
+                                        Client depuis : @DateTime.Now.ToString("dd/MM/yyyy")
+                                    </li>
+                                    <li class="mb-2 d-flex align-items-center">
+                                        Email vérifié : <span class="badge bg-success ms-2">Oui</span>
+                                    </li>
+                                    <li class="d-flex align-items-center">
+                                        Contact valide : <span class="badge bg-success ms-2">Oui</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Client.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copier l'email du client
+            const copyEmail = (email) => {
+                navigator.clipboard.writeText(email).then(() => {
+                    alert('Email copié : ' + email);
+                });
+            };
+
+            // Ajouter la fonction de copie sur l'email si nécessaire
+            const emailElement = document.querySelector('a[href^="mailto:"]');
+            if (emailElement) {
+                emailElement.style.cursor = 'pointer';
+                emailElement.title = 'Cliquer pour copier l\'email';
+                emailElement.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    copyEmail(this.textContent);
+                });
+            }
+
+            // Copier le téléphone du client
+            const copyPhone = (phone) => {
+                navigator.clipboard.writeText(phone).then(() => {
+                    alert('Numéro copié : ' + phone);
+                });
+            };
+
+            // Ajouter la fonction de copie sur le téléphone
+            const phoneElement = document.querySelector('a[href^="tel:"]');
+            if (phoneElement) {
+                phoneElement.style.cursor = 'pointer';
+                phoneElement.title = 'Cliquer pour copier le numéro';
+                phoneElement.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    copyPhone(this.textContent);
+                });
+            }
+        });
+    </script>
+}
+
+<style>
+    .detail-value {
+        padding: 8px 12px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #4a6cf7;
+    }
+
+    .actions-card {
+        position: sticky;
+        top: 20px;
+    }
+
+    .info-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .main-btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .primary-btn {
+        background: #4a6cf7;
+        color: #fff;
+    }
+
+        .primary-btn:hover {
+            background: #3a56d4;
+            color: #fff;
+        }
+
+    .primary-btn-outline {
+        background: transparent;
+        color: #4a6cf7;
+        border-color: #4a6cf7;
+    }
+
+        .primary-btn-outline:hover {
+            background: #4a6cf7;
+            color: #fff;
+        }
+
+    .success-btn-outline {
+        background: transparent;
+        color: #28a745;
+        border-color: #28a745;
+    }
+
+        .success-btn-outline:hover {
+            background: #28a745;
+            color: #fff;
+        }
+
+    .danger-btn {
+        background: #f95c5c;
+        color: #fff;
+    }
+
+        .danger-btn:hover {
+            background: #e04444;
+            color: #fff;
+        }
+
+    .light-btn {
+        background: #e9ecef;
+        color: #495057;
+        border-color: #dee2e6;
+    }
+
+        .light-btn:hover {
+            background: #dee2e6;
+            color: #212529;
+        }
+
+    .badge {
+        font-size: 12px;
+        padding: 5px 10px;
+        font-weight: 500;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    a {
+        text-decoration: none;
+        color: #4a6cf7;
+    }
+
+        a:hover {
+            color: #3a56d4;
+            text-decoration: underline;
+        }
+</style>

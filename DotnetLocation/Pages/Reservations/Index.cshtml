@@ -2,65 +2,353 @@
 @model DotnetLocation.Pages.Reservations.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestion des Réservations";
 }
 
-<h1>Index</h1>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Gestion des Réservations</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">Tableau de bord</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Réservations
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+<!-- ========== tables-wrapper start ========== -->
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Liste des Réservations</h6>
+                    <a asp-page="Create" class="main-btn primary-btn btn-hover">
+                        <i class="lni lni-plus me-2"></i> Nouvelle Réservation
+                    </a>
+                </div>
+                <p class="text-sm mb-20">
+                    Gérez toutes les réservations de location de véhicules. Suivez les réservations en cours, à venir et terminées.
+                </p>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Reservation[0].Client)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reservation[0].Vehicule)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reservation[0].DateDebut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reservation[0].DateFin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reservation[0].DateRetourVehicule)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reservation[0].Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Reservation) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.Contact)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Vehicule.Carburant)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateDebut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateFin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateRetourVehicule)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                
+                <div class="table-wrapper table-responsive">
+                    <table class="table striped-table">
+                        <thead>
+                            <tr>
+                                <th class="min-width">
+                                    <h6>Client</h6>
+                                </th>
+                                <th class="min-width">
+                                    <h6>Véhicule</h6>
+                                </th>
+                                <th class="min-width">
+                                    <h6>Date Début</h6>
+                                </th>
+                                <th class="min-width">
+                                    <h6>Date Fin</h6>
+                                </th>
+                                <th class="min-width">
+                                    <h6>Retour</h6>
+                                </th>
+                                <th class="min-width">
+                                    <h6>Statut</h6>
+                                </th>
+                                <th class="text-center min-width">
+                                    <h6>Actions</h6>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Reservation != null && Model.Reservation.Any())
+                            {
+                                @foreach (var item in Model.Reservation)
+                                {
+                                    <tr>
+                                        <td class="min-width">
+                                            <div class="lead">
+                                                <p class="mb-0">@Html.DisplayFor(modelItem => item.Client.Nom) @Html.DisplayFor(modelItem => item.Client.Prenom)</p>
+                                            </div>
+                                        </td>
+                                        <td class="min-width">
+                                            <div class="vehicle-info">
+                                                <div>
+                                                    @Html.DisplayFor(modelItem => item.Vehicule.Marque) @Html.DisplayFor(modelItem => item.Vehicule.Model)
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="min-width">
+                                            <div class="date-info">
+                                                <span>@item.DateDebut.ToString("dd/MM/yyyy")</span>
+                                            </div>
+                                        </td>
+                                        <td class="min-width">
+                                            <div class="date-info">
+                                                <span>@item.DateFin.ToString("dd/MM/yyyy")</span>
+                                            </div>
+                                        </td>
+                                        <td class="min-width">
+                                            @if (item.DateRetourVehicule.HasValue)
+                                            {
+                                                <div class="date-info">
+                                                    <i class="lni lni-flag text-info me-1"></i>
+                                                    <span>@item.DateRetourVehicule.Value.ToString("dd/MM/yyyy")</span>
+                                                    <small class="text-muted d-block">@item.DateRetourVehicule.Value.ToString("HH:mm")</small>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">-</span>
+                                            }
+                                        </td>
+                                        <td class="min-width">
+                                            @{
+                                                var statusClass = item.Status switch
+                                                {
+                                                    Models.Enums.ReservationStatus.EnCours => "success-btn",
+                                                    Models.Enums.ReservationStatus.Terminee => "secondary-btn",
+                                                    Models.Enums.ReservationStatus.Annulee => "danger-btn",
+                                                    _ => "light-btn"
+                                                };
+                                            }
+                                            <span class="status-btn @statusClass">@item.Status</span>
+                                        </td>
+                                        <td>
+                                            <div class="action d-flex justify-content-center">
+                                                <a asp-page="./Edit" asp-route-id="@item.Id" class="text-primary me-3" title="Modifier">
+                                                    <i class="lni lni-pencil"></i>
+                                                </a>
+                                                <a asp-page="./Details" asp-route-id="@item.Id" class="text-info me-3" title="Détails">
+                                                    <i class="lni lni-eye"></i>
+                                                </a>
+                                                <a asp-page="./Delete" asp-route-id="@item.Id" class="text-danger" title="Supprimer">
+                                                    <i class="lni lni-trash-can"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <div class="empty-state">
+                                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-3">
+                                                <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z" fill="#e0e0e0" />
+                                            </svg>
+                                            <h6 class="text-muted">Aucune réservation trouvée</h6>
+                                            <p class="text-sm text-muted">Commencez par créer votre première réservation</p>
+                                            <a asp-page="Create" class="main-btn primary-btn btn-hover mt-3">
+                                                <i class="lni lni-plus me-2"></i> Créer une réservation
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.Reservation != null && Model.Reservation.Count() > 10)
+                {
+                    <div class="pagination-wrapper mt-4">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                        <i class="lni lni-chevron-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">
+                                        <i class="lni lni-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+
+<style>
+    .filter-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+    }
+
+    .stat-card-small {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 100%;
+    }
+
+    .stat-icon-small {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+    }
+
+    .stat-number-small {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .stat-label-small {
+        font-size: 12px;
+        color: #6c757d;
+        margin: 4px 0 0 0;
+    }
+
+    .lead {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .lead-image {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f5ff;
+        border-radius: 8px;
+    }
+
+    .lead-text p {
+        margin: 0;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .vehicle-info {
+        min-width: 120px;
+    }
+
+    .vehicle-badge {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+        color: white;
+    }
+
+    .date-info {
+        min-width: 90px;
+    }
+
+    .status-btn {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .warning-btn {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .info-btn {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+
+    .success-btn {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .secondary-btn {
+        background-color: #e2e3e5;
+        color: #383d41;
+        border: 1px solid #d6d8db;
+    }
+
+    .danger-btn {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .light-btn {
+        background-color: #f8f9fa;
+        color: #212529;
+        border: 1px solid #e9ecef;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 30px 0;
+    }
+
+    .bg-primary {
+        background-color: #4a6cf7 !important;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .bg-info {
+        background-color: #17a2b8 !important;
+    }
+
+    .bg-secondary {
+        background-color: #6c757d !important;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+</style>
+

@@ -2,30 +2,159 @@
 @model DotnetLocation.Pages.Categories.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Détails de la Catégorie";
 }
 
-<h1>Details</h1>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Détails de la Catégorie</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                                Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">Catégories</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Détails
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
 
-<div>
-    <h4>Categorie</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Categorie.Nom)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Categorie.Nom)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Categorie.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Categorie.Description)
-        </dd>
-    </dl>
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 class="mb-0">Informations détaillées</h6>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="info-card">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-3 text-sm-end fw-500 mb-2">
+                                    @Html.DisplayNameFor(model => model.Categorie.Nom)
+                                </dt>
+                                <dd class="col-sm-9 mb-2">
+                                    <div class="detail-value">
+                                        @Html.DisplayFor(model => model.Categorie.Nom)
+                                    </div>
+                                </dd>
+
+                                <dt class="col-sm-3 text-sm-end fw-500 mb-2">
+                                    @Html.DisplayNameFor(model => model.Categorie.Description)
+                                </dt>
+                                <dd class="col-sm-9 mb-2">
+                                    <div class="detail-value">
+                                        @if (!string.IsNullOrEmpty(Model.Categorie.Description))
+                                        {
+                                            @Html.DisplayFor(model => model.Categorie.Description)
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Aucune description fournie</span>
+                                        }
+                                    </div>
+                                </dd>
+
+                                <dt class="col-sm-3 text-sm-end fw-500 mb-2">
+                                    Date de création
+                                </dt>
+                                <dd class="col-sm-9 mb-2">
+                                    <div class="detail-value">
+                                        <i class="lni lni-calendar text-primary me-2"></i>
+                                        @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                </dd>
+
+                                <dt class="col-sm-3 text-sm-end fw-500 mb-2">
+                                    Dernière modification
+                                </dt>
+                                <dd class="col-sm-9 mb-2">
+                                    <div class="detail-value">
+                                        <i class="lni lni-timer text-warning me-2"></i>
+                                        @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card-style actions-card">
+                            <h6 class="mb-3">Actions</h6>
+                            <div class="d-grid gap-2">
+                                <a asp-page="./Edit" asp-route-id="@Model.Categorie.Id" class="main-btn primary-btn btn-hover">
+                                    <i class="lni lni-pencil me-2"></i> Modifier
+                                </a>
+
+                                <a asp-page="./Delete" asp-route-id="@Model.Categorie.Id" class="main-btn danger-btn btn-hover">
+                                    <i class="lni lni-trash-can me-2"></i> Supprimer
+                                </a>
+
+                                <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                    <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Categorie.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
+<style>
+    .detail-value {
+        padding: 8px 12px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #4a6cf7;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 10px 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        min-width: 80px;
+    }
+
+    .stat-number {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 4px;
+    }
+
+    .actions-card {
+        position: sticky;
+        top: 20px;
+    }
+</style>

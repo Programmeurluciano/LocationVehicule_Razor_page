@@ -1,22 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DotnetLocation.Data;
+using DotnetLocation.Models;
+using Elastic.Clients.Elasticsearch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using DotnetLocation.Data;
-using DotnetLocation.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DotnetLocation.Pages.Reservations
 {
     public class DeleteModel : PageModel
     {
         private readonly DotnetLocation.Data.AppDbContext _context;
+        private readonly ElasticsearchClient _elastic;
 
-        public DeleteModel(DotnetLocation.Data.AppDbContext context)
+        public DeleteModel(DotnetLocation.Data.AppDbContext context, ElasticsearchClient elastic)
         {
             _context = context;
+            _elastic = elastic;
         }
 
         [BindProperty]
@@ -54,6 +57,11 @@ namespace DotnetLocation.Pages.Reservations
                 Reservation = reservation;
                 _context.Reservations.Remove(Reservation);
                 await _context.SaveChangesAsync();
+
+                var esResponse = await _elastic.DeleteAsync(
+                   index: "reservations",
+                   id: id.ToString()
+               );
             }
 
             return RedirectToPage("./Index");

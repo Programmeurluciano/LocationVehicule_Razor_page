@@ -2,78 +2,479 @@
 @model DotnetLocation.Pages.Vehicules.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Détails du Véhicule";
 }
 
-<h1>Details</h1>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Détails du Véhicule</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                               Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">
+                                Véhicules
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Détails
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
 
-<div>
-    <h4>Vehicule</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Categorie)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Categorie.Nom)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Marque)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Marque)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Model)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Model)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Annee)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Annee)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Transmission)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Transmission)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Carburant)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Carburant)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Prix)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Prix)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Caution)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Caution)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Penalite)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Penalite)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vehicule.Disponibilite)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vehicule.Disponibilite)
-        </dd>
-    </dl>
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Informations détaillées</h6>
+                        <p class="text-sm mb-0">
+                            Véhicule : <strong>@Model.Vehicule?.Marque @Model.Vehicule?.Model</strong>
+                        </p>
+                    </div>
+                    <div class="badge @(Model.Vehicule?.Disponibilite == true ? "bg-success" : "bg-warning")">
+                        <i class="lni @(Model.Vehicule?.Disponibilite == true ? "lni-checkmark-circle" : "lni-timer") me-1"></i>
+                        @(Model.Vehicule?.Disponibilite == true ? "Disponible" : "Indisponible")
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <!-- Carousel d'images -->
+                            @if (Model.Vehicule != null && Model.Vehicule.Images != null && Model.Vehicule.Images.Any())
+                            {
+                                <div class="mb-4">
+                                    <h6 class="mb-3"><i class="lni lni-gallery me-2"></i> Galerie du véhicule</h6>
+                                    <div id="vehicleCarousel" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner" style="border-radius: 10px; overflow: hidden;">
+                                            @foreach (var image in Model.Vehicule.Images)
+                                            {
+                                                <div class="carousel-item  @(image.EstPrincipale ? "active" : "")">
+                                                    <img src="@image.ImageUrl"
+                                                         class="d-block w-100"
+                                                         alt="Image @(image.Id) du véhicule"
+                                                         style="height: 400px; object-fit: cover;">
+                                                </div>
+                                            }
+                                        </div>
+                                        @if (Model.Vehicule.Images.Count > 0)
+                                        {
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Précédent</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#vehicleCarousel" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Suivant</span>
+                                            </button>
+                                        }
+                                    </div>
+
+                                    <!-- Miniatures -->
+                                    @if (Model.Vehicule.Images.Count > 0)
+                                    {
+                                        <div class="row mt-3">
+                                            @foreach (var image in Model.Vehicule.Images)
+                                            {
+                                                <div class="col-3 col-md-2">
+                                                    <img src="@image.ImageUrl"
+                                                         class="img-thumbnail thumbnail @(image.EstPrincipale ? "active" : "")"
+                                                         alt="Mini @(image.Id)"
+                                                         style="cursor: pointer; height: 80px; object-fit: cover;"
+                                                         data-bs-target="#vehicleCarousel"
+                                                         data-bs-slide-to="@(image.Id)">
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mb-4">
+                                    <div class="no-images-placeholder" style="height: 300px; background: #f8f9fa; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <div class="text-center">
+                                            <i class="lni lni-car" style="font-size: 64px; color: #dee2e6;"></i>
+                                            <p class="text-muted mt-2">Aucune image disponible</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Informations détaillées -->
+                            <div class="info-card">
+                                <h6 class="mb-3"><i class="lni lni-list me-2"></i> Caractéristiques du véhicule</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-category me-1"></i> Catégorie
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    <span class="badge bg-info">@Model.Vehicule?.Categorie?.Nom</span>
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-car-alt me-1"></i> Marque
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    @Model.Vehicule?.Marque
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-car me-1"></i> Modèle
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    @Model.Vehicule?.Model
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-calendar me-1"></i> Année
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    @Model.Vehicule?.Annee
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-control-panel me-1"></i> Transmission
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    <span class="badge bg-light text-dark">@Model.Vehicule?.Transmission</span>
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-drop me-1"></i> Carburant
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    <span class="badge bg-warning">@Model.Vehicule?.Carburant</span>
+                                                </div>
+                                            </dd>
+
+                                            <dt class="col-sm-5 fw-500 text-muted mb-2">
+                                                <i class="lni lni-timer me-1"></i> Dernière mise à jour
+                                            </dt>
+                                            <dd class="col-sm-7 mb-2">
+                                                <div class="detail-value">
+                                                    @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Informations tarifaires -->
+                            <div class="info-card mt-4">
+                                <h6 class="mb-3"><i class="lni lni-money-protection me-2"></i> Informations tarifaires</h6>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="price-card text-center">
+                                            <div class="price-icon bg-primary">
+                                                <i class="lni lni-money-protection"></i>
+                                            </div>
+                                            <div class="price-content">
+                                                <h3 class="price-number">@Model.Vehicule?.Prix.ToString("N0") <small>Ar</small></h3>
+                                                <p class="price-label">Prix par jour</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="price-card text-center">
+                                            <div class="price-icon bg-success">
+                                                <i class="lni lni-shield"></i>
+                                            </div>
+                                            <div class="price-content">
+                                                <h3 class="price-number">@Model.Vehicule?.Caution.ToString("N0") <small>Ar</small></h3>
+                                                <p class="price-label">Caution</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="price-card text-center">
+                                            <div class="price-icon bg-warning">
+                                                <i class="lni lni-warning"></i>
+                                            </div>
+                                            <div class="price-content">
+                                                <h3 class="price-number">@Model.Vehicule?.Penalite.ToString("N0") <small>Ar</small></h3>
+                                                <p class="price-label">Pénalité/jour</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <!-- Carte d'actions -->
+                            <div class="card-style actions-card mb-4">
+                                <h6 class="mb-3"><i class="lni lni-control-panel me-2"></i> Actions</h6>
+                                <div class="d-grid gap-2">
+                                    <a asp-page="./Edit" asp-route-id="@Model.Vehicule?.Id" class="main-btn primary-btn btn-hover">
+                                        <i class="lni lni-pencil me-2"></i> Modifier
+                                    </a>
+
+                                    <a asp-page="./Delete" asp-route-id="@Model.Vehicule?.Id" class="main-btn danger-btn btn-hover">
+                                        <i class="lni lni-trash-can me-2"></i> Supprimer
+                                    </a>
+
+                                    <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                        <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Informations rapides -->
+                            <div class="card-style info-card">
+                                <h6 class="mb-3">Informations rapides</h6>
+                                <ul class="list-unstyled text-sm">
+                                    <li class="mb-2">
+                                        @(Model.Vehicule?.Disponibilite == true ? "Disponible à la location" : "Actuellement indisponible")
+                                    </li>
+                                    <li class="mb-2">
+                                        Année : @Model.Vehicule?.Annee
+                                    </li>
+                                    <li class="mb-2">
+                                        Transmission : @Model.Vehicule?.Transmission
+                                    </li>
+                                    <li>
+                                        Carburant : @Model.Vehicule?.Carburant
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Vehicule.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des miniatures du carousel
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    // Retirer la classe active de toutes les miniatures
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    // Ajouter la classe active à la miniature cliquée
+                    this.classList.add('active');
+                    // Ajouter une bordure pour indiquer l'activation
+                    this.style.borderColor = '#4a6cf7';
+                });
+            });
+
+            // Réinitialiser les bordures des miniatures
+            const resetThumbnailBorders = () => {
+                thumbnails.forEach(thumb => {
+                    if (!thumb.classList.contains('active')) {
+                        thumb.style.borderColor = '#dee2e6';
+                    }
+                });
+            };
+
+            // Écouter les événements du carousel
+            const carousel = document.getElementById('vehicleCarousel');
+            if (carousel) {
+                carousel.addEventListener('slide.bs.carousel', function (e) {
+                    // Mettre à jour les miniatures actives
+                    const activeIndex = e.to;
+                    thumbnails.forEach((thumb, index) => {
+                        thumb.classList.remove('active');
+                        if (index === activeIndex) {
+                            thumb.classList.add('active');
+                            thumb.style.borderColor = '#4a6cf7';
+                        } else {
+                            thumb.style.borderColor = '#dee2e6';
+                        }
+                    });
+                });
+            }
+
+            // Copier l'ID du véhicule
+            const copyVehicleId = () => {
+                const vehicleId = '@Model.Vehicule?.Id';
+                navigator.clipboard.writeText(vehicleId).then(() => {
+                    alert('ID du véhicule copié : ' + vehicleId);
+                });
+            };
+
+            // Ajouter un bouton de copie d'ID si nécessaire
+            const idElement = document.querySelector('code');
+            if (idElement) {
+                idElement.style.cursor = 'pointer';
+                idElement.title = 'Cliquer pour copier l\'ID';
+                idElement.addEventListener('click', copyVehicleId);
+            }
+        });
+    </script>
+}
+
+<style>
+    .detail-value {
+        padding: 8px 12px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #4a6cf7;
+    }
+
+    .actions-card {
+        position: sticky;
+        top: 20px;
+    }
+
+    .info-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .price-card {
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid #e9ecef;
+        transition: transform 0.2s ease;
+    }
+
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+    .price-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        color: white;
+        font-size: 24px;
+    }
+
+    .price-number {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+        color: #2d3748;
+    }
+
+        .price-number small {
+            font-size: 14px;
+            color: #718096;
+        }
+
+    .price-label {
+        font-size: 14px;
+        color: #718096;
+        margin: 5px 0 0 0;
+    }
+
+    .stats-list .stat-item {
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .stats-list .stat-item:last-child {
+            border-bottom: none;
+        }
+
+    .stat-label {
+        color: #4a5568;
+    }
+
+    .stat-value {
+        font-weight: 600;
+        min-width: 60px;
+        text-align: center;
+    }
+
+    .thumbnail {
+        transition: all 0.3s ease;
+        border: 2px solid #dee2e6;
+    }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #4a6cf7;
+            transform: scale(1.05);
+        }
+
+    .no-images-placeholder {
+        border: 2px dashed #dee2e6;
+    }
+
+    .qr-code-placeholder {
+        border: 2px dashed #dee2e6;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        background: rgba(0,0,0,0.2);
+        width: 50px;
+        height: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-radius: 50%;
+        margin: 0 15px;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 5px 10px;
+        font-weight: 500;
+    }
+
+    code {
+        background: #2d3748;
+        color: #81e6d9;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+        code:hover {
+            background: #4a5568;
+        }
+</style>

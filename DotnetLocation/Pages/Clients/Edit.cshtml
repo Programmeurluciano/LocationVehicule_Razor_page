@@ -2,59 +2,439 @@
 @model DotnetLocation.Pages.Clients.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Modifier le Client";
 }
 
-<h1>Edit</h1>
-
-<h4>Client</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Client.Id" />
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.Nom" class="control-label"></label>
-                <input asp-for="Client.Nom" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.Nom" class="text-danger"></span>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Modifier le Client</h2>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.Prenom" class="control-label"></label>
-                <input asp-for="Client.Prenom" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.Prenom" class="text-danger"></span>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                                Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">
+                                Clients
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Modification
+                        </li>
+                    </ol>
+                </nav>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.Email" class="control-label"></label>
-                <input asp-for="Client.Email" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.Contact" class="control-label"></label>
-                <input asp-for="Client.Contact" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.Contact" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.MotDePasseHash" class="control-label"></label>
-                <input asp-for="Client.MotDePasseHash" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.MotDePasseHash" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+        <!-- end col -->
     </div>
+    <!-- end row -->
 </div>
+<!-- ========== title-wrapper end ========== -->
 
-<div>
-    <a asp-page="./Index">Back to List</a>
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Formulaire de modification</h6>
+                        <p class="text-sm mb-0">
+                            Client : <strong>@Model.Client?.Nom @Model.Client?.Prenom</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Client.Id" />
+
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <!-- Informations personnelles -->
+                                <div class="info-card">
+                                    <h6 class="mb-3"><i class="lni lni-user me-2"></i> Informations personnelles</h6>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label asp-for="Client.Nom" class="form-label fw-500">
+                                                    Nom <span class="text-danger">*</span>
+                                                </label>
+                                                <input asp-for="Client.Nom" class="form-control" aria-required="true" placeholder="Entrez le nom" />
+                                                <span asp-validation-for="Client.Nom" class="text-danger text-sm"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label asp-for="Client.Prenom" class="form-label fw-500">
+                                                    Prénom <span class="text-danger">*</span>
+                                                </label>
+                                                <input asp-for="Client.Prenom" class="form-control" aria-required="true" placeholder="Entrez le prénom" />
+                                                <span asp-validation-for="Client.Prenom" class="text-danger text-sm"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Coordonnées -->
+                                <div class="info-card mt-4">
+                                    <h6 class="mb-3"><i class="lni lni-phone me-2"></i> Coordonnées</h6>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label asp-for="Client.Email" class="form-label fw-500">
+                                                    Email <span class="text-danger">*</span>
+                                                </label>
+                                                <input asp-for="Client.Email" class="form-control" type="email" aria-required="true" placeholder="exemple@email.com" />
+                                                <span asp-validation-for="Client.Email" class="text-danger text-sm"></span>
+                                                <small class="form-text text-muted">L'email sera utilisé pour les communications</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-3">
+                                                <label asp-for="Client.Contact" class="form-label fw-500">
+                                                    Contact <span class="text-danger">*</span>
+                                                </label>
+                                                <input asp-for="Client.Contact" class="form-control" aria-required="true" placeholder="+261 34 00 000 00" />
+                                                <span asp-validation-for="Client.Contact" class="text-danger text-sm"></span>
+                                                <small class="form-text text-muted">Numéro de téléphone principal</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Champ caché pour le mot de passe -->
+                                <div class="form-group d-none">
+                                    <label asp-for="Client.MotDePasseHash" class="control-label"></label>
+                                    <input asp-for="Client.MotDePasseHash" class="form-control" />
+                                    <span asp-validation-for="Client.MotDePasseHash" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <!-- Carte d'actions -->
+                                <div class="card-style actions-card mb-4">
+                                    <h6 class="mb-3"><i class="lni lni-control-panel me-2"></i> Actions</h6>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="main-btn primary-btn btn-hover">
+                                            <i class="lni lni-save me-2"></i> Enregistrer
+                                        </button>
+
+                                        <a asp-page="./Details" asp-route-id="@Model.Client?.Id" class="main-btn info-btn-outline btn-hover">
+                                            <i class="lni lni-eye me-2"></i> Voir les détails
+                                        </a>
+
+                                        <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                            <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                        </a>
+                                    </div>
+                                </div>
+
+                                @* <!-- Aide et informations -->
+                                <div class="card-style info-card">
+                                    <h6 class="mb-3"><i class="lni lni-information me-2"></i> Informations</h6>
+                                    <ul class="list-unstyled text-sm">
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="lni lni-asterisk text-danger me-2"></i>
+                                            <span>Champs obligatoires</span>
+                                        </li>
+                                        <li class="mb-2 d-flex align-items-center">
+                                            <i class="lni lni-envelope me-2"></i>
+                                            <span>Email valide requis</span>
+                                        </li>
+                                        <li class="d-flex align-items-center">
+                                            <i class="lni lni-phone me-2"></i>
+                                            <span>Format téléphone: +261 XX XX XXX XX</span>
+                                        </li>
+                                    </ul>
+                                </div> *@
+
+                                <!-- Aperçu des modifications -->
+                                <div class="card-style info-card mt-4">
+                                    <h6 class="mb-3"><i class="lni lni-eye me-2"></i> Aperçu</h6>
+                                    <div class="preview-card text-center p-3 bg-white rounded">
+                                        <div class="preview-avatar mb-2">
+                                            <i class="lni lni-user" style="font-size: 48px; color: #4a6cf7;"></i>
+                                        </div>
+                                        <h5 class="preview-name mb-1" id="previewNomPrenom">
+                                            @Model.Client?.Nom @Model.Client?.Prenom
+                                        </h5>
+                                        <p class="preview-email text-muted small" id="previewEmail">
+                                            @Model.Client?.Email
+                                        </p>
+                                        <p class="preview-phone text-muted small" id="previewContact">
+                                            @Model.Client?.Contact
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aperçu en temps réel des modifications
+            const nomInput = document.getElementById('Client_Nom');
+            const prenomInput = document.getElementById('Client_Prenom');
+            const emailInput = document.getElementById('Client_Email');
+            const contactInput = document.getElementById('Client_Contact');
+
+            const previewNomPrenom = document.getElementById('previewNomPrenom');
+            const previewEmail = document.getElementById('previewEmail');
+            const previewContact = document.getElementById('previewContact');
+
+            function updatePreview() {
+                // Mettre à jour le nom complet
+                const nom = nomInput.value.trim() || 'Nom';
+                const prenom = prenomInput.value.trim() || 'Prénom';
+                previewNomPrenom.textContent = nom + ' ' + prenom;
+
+                // Mettre à jour l'email
+                previewEmail.textContent = emailInput.value.trim() || 'email@exemple.com';
+
+                // Mettre à jour le contact
+                previewContact.textContent = contactInput.value.trim() || '+261 XX XX XXX XX';
+            }
+
+            if (nomInput && prenomInput && emailInput && contactInput) {
+                nomInput.addEventListener('input', updatePreview);
+                prenomInput.addEventListener('input', updatePreview);
+                emailInput.addEventListener('input', updatePreview);
+                contactInput.addEventListener('input', updatePreview);
+            }
+
+            // Validation du format téléphone (optionnel)
+            if (contactInput) {
+                contactInput.addEventListener('blur', function() {
+                    const phonePattern = /^[0-9+\-\s]+$/;
+                    if (this.value && !phonePattern.test(this.value)) {
+                        this.classList.add('is-invalid');
+                        const errorSpan = document.querySelector('[data-valmsg-for="Client.Contact"]');
+                        if (errorSpan) {
+                            errorSpan.textContent = 'Format de téléphone invalide';
+                        }
+                    } else {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            }
+
+            // Confirmation avant de quitter avec des modifications non enregistrées
+            let formModified = false;
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input:not([type=hidden])');
+
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    formModified = true;
+                });
+            });
+
+            window.addEventListener('beforeunload', function(e) {
+                if (formModified) {
+                    e.preventDefault();
+                    e.returnValue = 'Vous avez des modifications non enregistrées. Êtes-vous sûr de vouloir quitter ?';
+                }
+            });
+
+            form.addEventListener('submit', function() {
+                formModified = false;
+            });
+        });
+    </script>
 }
+
+<style>
+    .detail-value {
+        padding: 8px 12px;
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #4a6cf7;
+    }
+
+    .actions-card {
+        position: sticky;
+        top: 20px;
+    }
+
+    .info-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .main-btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border: 1px solid transparent;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .primary-btn {
+        background: #4a6cf7;
+        color: #fff;
+        border: 1px solid #4a6cf7;
+    }
+
+        .primary-btn:hover {
+            background: #3a56d4;
+            color: #fff;
+        }
+
+    .info-btn-outline {
+        background: transparent;
+        color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+        .info-btn-outline:hover {
+            background: #17a2b8;
+            color: #fff;
+        }
+
+    .light-btn {
+        background: #e9ecef;
+        color: #495057;
+        border-color: #dee2e6;
+    }
+
+        .light-btn:hover {
+            background: #dee2e6;
+            color: #212529;
+        }
+
+    .badge {
+        font-size: 12px;
+        padding: 5px 10px;
+        font-weight: 500;
+    }
+
+    /* Style des formulaires */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #2d3748;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.5rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+        .form-control:focus {
+            border-color: #4a6cf7;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
+        }
+
+        .form-control.is-invalid {
+            border-color: #f95c5c;
+        }
+
+            .form-control.is-invalid:focus {
+                box-shadow: 0 0 0 0.2rem rgba(249, 92, 92, 0.25);
+            }
+
+    .text-danger {
+        color: #f95c5c !important;
+    }
+
+    .text-sm {
+        font-size: 0.875rem;
+    }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    /* Style pour l'aperçu */
+    .preview-card {
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+        .preview-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+    .preview-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    /* Espacement */
+    .mt-4 {
+        margin-top: 1.5rem !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .me-2 {
+        margin-right: 0.5rem !important;
+    }
+
+    .d-none {
+        display: none !important;
+    }
+</style>

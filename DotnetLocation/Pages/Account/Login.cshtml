@@ -1,0 +1,118 @@
+﻿@page
+@model RazorAuth.Pages.Account.LoginModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="~/assets/images/favicon.svg" type="image/x-icon" />
+    <title>@ViewData["Title"] - DotnetLocation</title>
+
+    <!-- ========== All CSS files linkup ========= -->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/lineicons.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/assets/css/materialdesignicons.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/assets/css/fullcalendar.css" />
+    <link rel="stylesheet" href="~/assets/css/fullcalendar.css" />
+    <link rel="stylesheet" href="~/assets/css/main.css" />
+</head>
+<body>
+    <div class="container">
+
+        <div class="row g-0 auth-row mt-40">
+            <!-- LEFT COVER -->
+            <div class="col-lg-6">
+                <div class="auth-cover-wrapper bg-primary-100">
+                    <div class="auth-cover">
+                        <div class="title text-center">
+                            <h1 class="text-primary mb-10">Bon retour parmi nous</h1>
+                            <p class="text-medium">
+                                Connectez-vous à votre compte existant pour continuer
+                            </p>
+                        </div>
+                        <div class="cover-image">
+                            <img src="~/assets/images/auth/signin-image.svg" alt="" />
+                        </div>
+                        <div class="shape-image">
+                            <img src="~/assets/images/auth/shape.svg" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT FORM -->
+            <div class="col-lg-6">
+                <div class="signin-wrapper">
+                    <div class="form-wrapper">
+                        <h6 class="mb-15">Connexion</h6>
+                        <p class="text-sm mb-25">
+                            Saisissez vos identifiants pour accéder à votre compte.
+                        </p>
+
+                        <form method="post">
+                            <div class="row">
+
+                                <!-- USERNAME -->
+                                <div class="col-12">
+                                    <div class="input-style-1">
+                                        <label>Nom d’utilisateur</label>
+                                        <input asp-for="Input.Username" placeholder="Username" />
+                                        <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- PASSWORD -->
+                                <div class="col-12">
+                                    <div class="input-style-1">
+                                        <label>Mot de passe</label>
+                                        <input asp-for="Input.Password" type="password" placeholder="Password" />
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- SUBMIT -->
+                                <div class="col-12">
+                                    <div class="button-group d-flex justify-content-center flex-wrap">
+                                        <button type="submit"
+                                                class="main-btn primary-btn btn-hover w-100 text-center">
+                                            Connexion
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <!-- ERROR MESSAGE -->
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <p class="text-danger text-center mt-3">
+                                @Model.ErrorMessage
+                            </p>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- ======== main-wrapper end =========== -->
+    <!-- ========= All Javascript files linkup ======== -->
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/Chart.min.js"></script>
+    <script src="~/assets/js/dynamic-pie-chart.js"></script>
+    <script src="~/assets/js/moment.min.js"></script>
+    <script src="~/assets/js/fullcalendar.js"></script>
+    <script src="~/assets/js/jvectormap.min.js"></script>
+    <script src="~/assets/js/world-merc.js"></script>
+    <script src="~/assets/js/polyfill.js"></script>
+    <script src="~/assets/js/main.js"></script>
+</body>
+</html>

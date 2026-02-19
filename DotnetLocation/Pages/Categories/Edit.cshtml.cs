@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DotnetLocation.Data;
+using DotnetLocation.Models;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.MachineLearning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using DotnetLocation.Data;
-using DotnetLocation.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DotnetLocation.Pages.Categories
 {
     public class EditModel : PageModel
     {
         private readonly DotnetLocation.Data.AppDbContext _context;
+        private readonly ElasticsearchClient _elastic;
 
-        public EditModel(DotnetLocation.Data.AppDbContext context)
+        public EditModel(DotnetLocation.Data.AppDbContext context , ElasticsearchClient elastic)
         {
-            _context = context;
+            _context = context; 
+            _elastic = elastic;
         }
 
         [BindProperty]
@@ -53,6 +57,23 @@ namespace DotnetLocation.Pages.Categories
             try
             {
                 await _context.SaveChangesAsync();
+
+                var esResponse = await _elastic.UpdateAsync<Categorie, Categorie>(
+                    index: "categories",
+                    id: Categorie.Id.ToString(),
+                    u => u.Doc(Categorie).DocAsUpsert(true)
+                );
+
+                if (!esResponse.IsValidResponse)
+                {
+                    Console.WriteLine("❌ Erreur update Elasticsearch");
+                    Console.WriteLine(esResponse.DebugInformation);
+                }
+                else
+                {
+                    Console.WriteLine("✅ Update Elasticsearch OK");
+                }
+
             }
             catch (DbUpdateConcurrencyException)
             {

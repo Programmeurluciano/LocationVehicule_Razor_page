@@ -1,10 +1,192 @@
 ﻿@page
-@model IndexModel
+@model DotnetLocation.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Tableau de bord";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome test</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="section">
+    <div class="container-fluid">
+        <!-- ========== Titre ========== -->
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title">
+                        <h2>Tableau de bord</h2>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Tableau de bord</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Aperçu</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== Cartes de statistiques ========== -->
+        <div class="row">
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="icon-card mb-30">
+                    <div class="icon purple">
+                        <i class="lni lni-car"></i>
+                    </div>
+                    <div class="content">
+                        <h6 class="mb-10">Véhicules totaux</h6>
+                        <h3 class="text-bold mb-10">@Model.TotalVehicules</h3>
+                        <p class="text-sm text-success"><i class="lni lni-arrow-up"></i> Véhicules</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="icon-card mb-30">
+                    <div class="icon success">
+                        <i class="lni lni-cart-full"></i>
+                    </div>
+                    <div class="content">
+                        <h6 class="mb-10">Réservations</h6>
+                        <h3 class="text-bold mb-10">@Model.TotalReservations</h3>
+                        <p class="text-sm text-success"><i class="lni lni-arrow-up"></i> Total</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="icon-card mb-30">
+                    <div class="icon primary">
+                        <i class="lni lni-dollar"></i>
+                    </div>
+                    <div class="content">
+                        <h6 class="mb-10">Revenu</h6>
+                        <h3 class="text-bold mb-10">@Model.TotalIncome Ar</h3>
+                        <p class="text-sm text-success"><i class="lni lni-arrow-up"></i> Revenu total</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-sm-6">
+                <div class="icon-card mb-30">
+                    <div class="icon orange">
+                        <i class="lni lni-user"></i>
+                    </div>
+                    <div class="content">
+                        <h6 class="mb-10">Clients</h6>
+                        <h3 class="text-bold mb-10">@Model.TotalClients</h3>
+                        <p class="text-sm text-success"><i class="lni lni-arrow-up"></i> Total clients</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== Graphiques ========== -->
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card-style mb-30">
+                    <div class="title d-flex flex-wrap justify-content-between">
+                        <div class="left">
+                            <h6 class="text-medium mb-10">Revenu des 6 derniers mois</h6>
+                        </div>
+                    </div>
+                    <div class="chart">
+                        <canvas id="ChartRevenue" style="width:100%; height:400px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau des véhicules populaires -->
+            <div class="col-lg-5">
+                <div class="card-style mb-30">
+                    <div class="title">
+                        <h6 class="text-medium mb-30">Véhicules populaires</h6>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table top-selling-table">
+                            <thead>
+                                <tr>
+                                    <th>Véhicule</th>
+                                    <th>Catégorie</th>
+                                    <th>Réservations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var veh in Model.TopVehicules)
+                                {
+                                    <tr>
+                                        <td>@veh.Marque @veh.Model</td>
+                                        <td>@veh.Categorie.Nom</td>
+                                        <td>@veh.Reservations.Count</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des réservations récentes -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card-style mb-30">
+                    <div class="title">
+                        <h6 class="text-medium mb-30">Réservations récentes</h6>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table top-selling-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Véhicule</th>
+                                    <th>Date de début</th>
+                                    <th>Date de fin</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var res in Model.RecentReservations)
+                                {
+                                    <tr>
+                                        <td>@res.Client.Nom @res.Client.Prenom</td>
+                                        <td>@res.Vehicule.Marque @res.Vehicule.Model</td>
+                                        <td>@res.DateDebut.ToShortDateString()</td>
+                                        <td>@res.DateFin.ToShortDateString()</td>
+                                        <td>@res.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('ChartRevenue').getContext('2d');
+        const revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartMonths)),
+                datasets: [{
+                    label: 'Revenu',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartRevenue)),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+}

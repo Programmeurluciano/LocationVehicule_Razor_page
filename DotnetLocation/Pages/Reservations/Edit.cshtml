@@ -2,64 +2,819 @@
 @model DotnetLocation.Pages.Reservations.EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Modifier la Réservation";
 }
 
-<h1>Edit</h1>
-
-<h4>Reservation</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Reservation.Id" />
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Reservation.ClientId" class="control-label"></label>
-                <select asp-for="Reservation.ClientId" class="form-control" asp-items="ViewBag.ClientId" aria-required="true"></select>
-                <span asp-validation-for="Reservation.ClientId" class="text-danger"></span>
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Modifier la Réservation</h2>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Reservation.VehiculeId" class="control-label"></label>
-                <select asp-for="Reservation.VehiculeId" class="form-control" asp-items="ViewBag.VehiculeId" aria-required="true"></select>
-                <span asp-validation-for="Reservation.VehiculeId" class="text-danger"></span>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                                <i class="lni lni-home me-1"></i> Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="Index">
+                                <i class="lni lni-calendar me-1"></i> Réservations
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <i class="lni lni-pencil me-1"></i> Modifier
+                        </li>
+                    </ol>
+                </nav>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Reservation.DateDebut" class="control-label"></label>
-                <input asp-for="Reservation.DateDebut" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Reservation.DateDebut" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Reservation.DateFin" class="control-label"></label>
-                <input asp-for="Reservation.DateFin" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Reservation.DateFin" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Reservation.DateRetourVehicule" class="control-label"></label>
-                <input asp-for="Reservation.DateRetourVehicule" class="form-control" />
-                <span asp-validation-for="Reservation.DateRetourVehicule" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Reservation.Status" class="control-label"></label>
-                <select asp-for="Reservation.Status" class="form-control" aria-required="true"></select>
-                <span asp-validation-for="Reservation.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+        <!-- end col -->
     </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">Modification de la réservation</h6>
+                        <p class="text-sm mb-0">
+                            Modifiez les informations de la réservation <strong>N° @Model.Reservation?.Id</strong>
+                        </p>
+                    </div>
+                    <div>
+                        @Model.Reservation?.Status
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="lni lni-checkmark-circle me-2"></i>
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="lni lni-warning me-2"></i>
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form method="post" id="reservationForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+                        <input type="hidden" asp-for="Reservation.Id" />
+
+                        <div class="row">
+                            <!-- Client -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Reservation.ClientId" class="form-label fw-500">
+                                        <i class="lni lni-user me-1"></i> Client <span class="text-danger">*</span>
+                                    </label>
+                                    <select asp-for="Reservation.ClientId" 
+                                            class="form-select select2-client"
+                                            asp-items="ViewBag.ClientId" 
+                                            aria-required="true"
+                                            data-placeholder="Sélectionner un client">
+                                        <option value="">-- Sélectionner un client --</option>
+                                    </select>
+                                    <div class="client-info mt-2" id="clientInfo">
+                                        @if (Model.Reservation?.Client != null)
+                                        {
+                                            <div class="alert alert-light">
+                                                <strong>@Model.Reservation.Client.Nom</strong>
+                                                <div class="text-sm">
+                                                    <i class="lni lni-phone"></i> @Model.Reservation.Client.Contact
+                                                    @if (!string.IsNullOrEmpty(Model.Reservation.Client.Email))
+                                                    {
+                                                        <br /><i class="lni lni-envelope"></i> @Model.Reservation.Client.Email
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <small class="form-text text-muted">Sélectionnez le client qui effectue la réservation</small>
+                                    <span asp-validation-for="Reservation.ClientId" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Véhicule -->
+                            <div class="col-md-6 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Reservation.VehiculeId" class="form-label fw-500">
+                                        <i class="lni lni-car me-1"></i> Véhicule <span class="text-danger">*</span>
+                                    </label>
+                                    <select asp-for="Reservation.VehiculeId" 
+                                            class="form-select select2-vehicle"
+                                            asp-items="ViewBag.VehiculeId" 
+                                            aria-required="true"
+                                            data-placeholder="Sélectionner un véhicule">
+                                        <option value="">-- Sélectionner un véhicule --</option>
+                                    </select>
+                                    <div class="vehicle-info mt-2" id="vehicleInfo">
+                                        @if (Model.Reservation?.Vehicule != null)
+                                        {
+                                            <div class="alert alert-light">
+                                                <strong>@Model.Reservation.Vehicule.Marque @Model.Reservation.Vehicule.Model</strong>
+                                                <div class="text-sm">
+                                                    <span class="badge bg-info me-2">@Model.Reservation.Vehicule.Categorie?.Nom</span>
+                                                    <span class="badge bg-warning me-2">@Model.Reservation.Vehicule.Carburant</span>
+                                                    <span class="badge bg-secondary">@Model.Reservation.Vehicule.Annee</span>
+                                                    <br /><i class="lni lni-money-protection"></i> @Model.Reservation.Vehicule.Prix.ToString("N0") Ar/jour
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <small class="form-text text-muted">Choisissez le véhicule à louer</small>
+                                    <span asp-validation-for="Reservation.VehiculeId" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Date de début -->
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Reservation.DateDebut" class="form-label fw-500">
+                                        <i class="lni lni-calendar me-1"></i> Date de début <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group date" id="dateDebutPicker">
+                                        <input asp-for="Reservation.DateDebut" 
+                                               class="form-control"
+                                               type="datetime-local"
+                                               aria-required="true" />
+                                        <span class="input-group-text">
+                                            <i class="lni lni-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <small class="form-text text-muted">Date et heure du début de la location</small>
+                                    <span asp-validation-for="Reservation.DateDebut" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Date de fin -->
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Reservation.DateFin" class="form-label fw-500">
+                                        <i class="lni lni-calendar me-1"></i> Date de fin <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group date" id="dateFinPicker">
+                                        <input asp-for="Reservation.DateFin" 
+                                               class="form-control"
+                                               type="datetime-local"
+                                               aria-required="true" />
+                                        <span class="input-group-text">
+                                            <i class="lni lni-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <small class="form-text text-muted">Date et heure prévue de retour</small>
+                                    <span asp-validation-for="Reservation.DateFin" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+
+                            <!-- Date de retour -->
+                            <div class="col-md-4 mb-3">
+                                <div class="form-group">
+                                    <label asp-for="Reservation.DateRetourVehicule" class="form-label fw-500">
+                                        <i class="lni lni-flag me-1"></i> Date de retour effective
+                                    </label>
+                                    <div class="input-group date" id="dateRetourPicker">
+                                        <input asp-for="Reservation.DateRetourVehicule" 
+                                               class="form-control"
+                                               type="datetime-local" />
+                                        <span class="input-group-text">
+                                            <i class="lni lni-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <small class="form-text text-muted">Date réelle de retour (optionnel)</small>
+                                    <span asp-validation-for="Reservation.DateRetourVehicule" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statut et durée -->
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label asp-for="Reservation.Status" class="form-label fw-500">
+                                        <i class="lni lni-tag me-1"></i> Statut <span class="text-danger">*</span>
+                                    </label>
+                                    <select asp-for="Reservation.Status" 
+                                            class="form-select"
+                                            asp-items="ViewBag.StatusList" 
+                                            aria-required="true">
+                                        <option value="">-- Sélectionner un statut --</option>
+                                    </select>
+                                    <small class="form-text text-muted">Modifiez le statut de la réservation</small>
+                                    <span asp-validation-for="Reservation.Status" class="text-danger text-sm"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Calcul de la durée -->
+                            <div class="col-md-6 mb-4">
+                                <div class="form-group">
+                                    <label class="form-label fw-500">
+                                        <i class="lni lni-calculator me-1"></i> Durée de la location
+                                    </label>
+                                    <div class="duration-calculator">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="durationDisplay" readonly 
+                                                   value="@GetDurationDisplay(Model.Reservation?.DateDebut, Model.Reservation?.DateFin)">
+                                            <button type="button" class="btn btn-outline-primary" onclick="calculateDuration()">
+                                                <i class="lni lni-calculator"></i> Recalculer
+                                            </button>
+                                        </div>
+                                        <small class="form-text text-muted">Durée totale de la location</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Récapitulatif des modifications -->
+                        @* <div class="info-card mb-4">
+                            <h6 class="mb-3"><i class="lni lni-list me-2"></i> Récapitulatif des modifications</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="info-item">
+                                        <span class="info-label">Client :</span>
+                                        <span class="info-value" id="selectedClient">
+                                            @Model.Reservation?.Client?.Nom ?? "Aucun"
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="info-item">
+                                        <span class="info-label">Véhicule :</span>
+                                        <span class="info-value" id="selectedVehicle">
+                                            @Model.Reservation?.Vehicule?.Marque @Model.Reservation?.Vehicule?.Model ?? "Aucun"
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="info-item">
+                                        <span class="info-label">Statut :</span>
+                                        <span class="info-value" id="selectedStatus">@Model.Reservation?.Status ?? "Aucun"</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="info-label">Période :</span>
+                                        <span class="info-value" id="selectedPeriod">
+                                            @(Model.Reservation?.DateDebut.ToString("dd/MM/yyyy HH:mm") ?? "") 
+                                            → 
+                                            @(Model.Reservation?.DateFin.ToString("dd/MM/yyyy HH:mm") ?? "")
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="info-label">Prix estimé :</span>
+                                        <span class="info-value" id="estimatedPrice">
+                                            @GetEstimatedPrice(Model.Reservation?.DateDebut, Model.Reservation?.DateFin, Model.Reservation?.Vehicule?.Prix) Ar
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> *@
+
+                      
+
+                        <!-- Boutons -->
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <div>
+                                <a asp-page="./Details" asp-route-id="@Model.Reservation?.Id" class="main-btn info-btn btn-hover me-2">
+                                    <i class="lni lni-eye me-2"></i> Détails
+                                </a>
+                                <a asp-page="Index" class="main-btn light-btn btn-hover">
+                                    <i class="lni lni-arrow-left me-2"></i> Retour à la liste
+                                </a>
+                            </div>
+                            <div>
+                                <button type="reset" class="main-btn secondary-btn btn-hover me-2">
+                                    <i class="lni lni-reload me-2"></i> Annuler modifications
+                                </button>
+                                <button type="submit" class="main-btn primary-btn btn-hover">
+                                    <i class="lni lni-checkmark-circle me-2"></i> Enregistrer les modifications
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
+@functions {
+    string GetStatusBadgeClass(string? status)
+    {
+        return status switch
+        {
+            "En attente" => "bg-warning",
+            "Confirmée" => "bg-info",
+            "En cours" => "bg-success",
+            "Terminée" => "bg-secondary",
+            "Annulée" => "bg-danger",
+            _ => "bg-light"
+        };
+    }
+    
+    string GetStatusIcon(string? status)
+    {
+        return status switch
+        {
+            "En attente" => "lni lni-timer",
+            "Confirmée" => "lni lni-checkmark-circle",
+            "En cours" => "lni lni-car",
+            "Terminée" => "lni lni-flag",
+            "Annulée" => "lni lni-close",
+            _ => "lni lni-question-circle"
+        };
+    }
+    
+    string GetDurationDisplay(DateTime? dateDebut, DateTime? dateFin)
+    {
+        if (!dateDebut.HasValue || !dateFin.HasValue)
+            return "-- jours -- heures";
+            
+        var duration = dateFin.Value - dateDebut.Value;
+        var days = duration.Days;
+        var hours = duration.Hours;
+        
+        return $"{days} jours {hours} heures";
+    }
+    
+    string GetEstimatedPrice(DateTime? dateDebut, DateTime? dateFin, decimal? prixJournalier)
+    {
+        if (!dateDebut.HasValue || !dateFin.HasValue || !prixJournalier.HasValue)
+            return "--";
+            
+        var duration = dateFin.Value - dateDebut.Value;
+        var days = duration.Days + (duration.Hours > 0 ? 1 : 0); // Arrondi au jour supérieur
+        
+        return (days * prixJournalier.Value).ToString("N0");
+    }
+}
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les sélecteurs
+            initSelect2();
+            
+            // Configurer les datepickers
+            setupDatePickers();
+            
+            // Écouter les changements pour mettre à jour le récapitulatif
+            setupChangeListeners();
+            
+            // Validation personnalisée
+            setupValidation();
+            
+            // Calculer la durée initiale
+            calculateDuration();
+            
+            // Focus sur le premier champ
+            setTimeout(() => {
+                document.querySelector('.select2-client').focus();
+            }, 100);
+        });
+        
+        function initSelect2() {
+            // Initialiser Select2 pour les clients (si disponible)
+            if ($ && $.fn.select2) {
+                $('.select2-client').select2({
+                    placeholder: "Sélectionner un client",
+                    allowClear: true
+                });
+                
+                $('.select2-vehicle').select2({
+                    placeholder: "Sélectionner un véhicule",
+                    allowClear: true
+                });
+                
+                // Mettre à jour les infos lors de la sélection
+                $('.select2-client').on('change', function() {
+                    updateClientInfo(this.value);
+                    updateRecap();
+                });
+                
+                $('.select2-vehicle').on('change', function() {
+                    updateVehicleInfo(this.value);
+                    updateRecap();
+                    calculateDuration();
+                });
+            }
+        }
+        
+        function setupDatePickers() {
+            const dateDebutInput = document.querySelector('input[name$="DateDebut"]');
+            const dateFinInput = document.querySelector('input[name$="DateFin"]');
+            const dateRetourInput = document.querySelector('input[name$="DateRetourVehicule"]');
+            
+            // Mettre en forme les dates pour l'input datetime-local
+            formatDateTimeInputs();
+            
+            // Lorsque la date de début change, mettre à jour le min de date de fin
+            if (dateDebutInput && dateFinInput) {
+                dateDebutInput.addEventListener('change', function() {
+                    dateFinInput.min = this.value;
+                    updateRecap();
+                    calculateDuration();
+                });
+            }
+            
+            if (dateFinInput) {
+                dateFinInput.addEventListener('change', function() {
+                    updateRecap();
+                    calculateDuration();
+                });
+            }
+            
+            if (dateRetourInput) {
+                dateRetourInput.addEventListener('change', updateRecap);
+            }
+        }
+        
+        function formatDateTimeInputs() {
+            // Formater les dates pour l'input datetime-local
+            const dateInputs = document.querySelectorAll('input[type="datetime-local"]');
+            dateInputs.forEach(input => {
+                if (input.value) {
+                    // Convertir au format local
+                    const date = new Date(input.value);
+                    const timezoneOffset = date.getTimezoneOffset() * 60000;
+                    const localDate = new Date(date.getTime() - timezoneOffset);
+                    input.value = localDate.toISOString().slice(0, 16);
+                }
+            });
+        }
+        
+        function setupChangeListeners() {
+            // Écouter les changements sur tous les champs
+            const form = document.getElementById('reservationForm');
+            const inputs = form.querySelectorAll('select, input');
+            
+            inputs.forEach(input => {
+                input.addEventListener('change', updateRecap);
+            });
+            
+            // Écouter spécifiquement le statut
+            const statusSelect = document.querySelector('select[name$="Status"]');
+            if (statusSelect) {
+                statusSelect.addEventListener('change', function() {
+                    updateSelectedStatus(this.value);
+                });
+            }
+        }
+        
+        function updateClientInfo(clientId) {
+            const clientInfoDiv = document.getElementById('clientInfo');
+            // Simuler la récupération des infos client
+            // En réalité, vous devriez faire un appel AJAX
+            if (clientId) {
+                clientInfoDiv.innerHTML = `
+                    <div class="alert alert-light">
+                        <strong>Client sélectionné</strong>
+                        <div class="text-sm">
+                            <i class="lni lni-sync"></i> Chargement des informations...
+                        </div>
+                    </div>
+                `;
+            } else {
+                clientInfoDiv.innerHTML = '';
+            }
+        }
+        
+        function updateVehicleInfo(vehicleId) {
+            const vehicleInfoDiv = document.getElementById('vehicleInfo');
+            // Simuler la récupération des infos véhicule
+            if (vehicleId) {
+                vehicleInfoDiv.innerHTML = `
+                    <div class="alert alert-light">
+                        <strong>Véhicule sélectionné</strong>
+                        <div class="text-sm">
+                            <i class="lni lni-sync"></i> Chargement des informations...
+                        </div>
+                    </div>
+                `;
+            } else {
+                vehicleInfoDiv.innerHTML = '';
+            }
+        }
+        
+        function updateRecap() {
+            // Mettre à jour le client sélectionné
+            const clientSelect = document.querySelector('select[name$="ClientId"]');
+            const selectedClient = clientSelect ? clientSelect.options[clientSelect.selectedIndex] : null;
+            const clientText = selectedClient && selectedClient.value ? selectedClient.text : 'Aucun';
+            document.getElementById('selectedClient').textContent = clientText;
+            
+            // Mettre à jour le véhicule sélectionné
+            const vehicleSelect = document.querySelector('select[name$="VehiculeId"]');
+            const selectedVehicle = vehicleSelect ? vehicleSelect.options[vehicleSelect.selectedIndex] : null;
+            const vehicleText = selectedVehicle && selectedVehicle.value ? selectedVehicle.text : 'Aucun';
+            document.getElementById('selectedVehicle').textContent = vehicleText;
+            
+            // Mettre à jour la période
+            const dateDebutInput = document.querySelector('input[name$="DateDebut"]');
+            const dateFinInput = document.querySelector('input[name$="DateFin"]');
+            
+            let periodText = 'Non définie';
+            if (dateDebutInput && dateDebutInput.value && dateFinInput && dateFinInput.value) {
+                const dateDebut = new Date(dateDebutInput.value);
+                const dateFin = new Date(dateFinInput.value);
+                
+                periodText = dateDebut.toLocaleDateString('fr-FR') + ' ' + dateDebut.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'}) + 
+                           ' → ' + 
+                           dateFin.toLocaleDateString('fr-FR') + ' ' + dateFin.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+            }
+            document.getElementById('selectedPeriod').textContent = periodText;
+            
+            // Mettre à jour le prix estimé
+            updateEstimatedPrice();
+        }
+        
+        function updateSelectedStatus(status) {
+            const statusText = status || 'Aucun';
+            document.getElementById('selectedStatus').textContent = statusText;
+        }
+        
+        function calculateDuration() {
+            const dateDebutInput = document.querySelector('input[name$="DateDebut"]');
+            const dateFinInput = document.querySelector('input[name$="DateFin"]');
+            const durationDisplay = document.getElementById('durationDisplay');
+            
+            if (dateDebutInput && dateDebutInput.value && dateFinInput && dateFinInput.value) {
+                const dateDebut = new Date(dateDebutInput.value);
+                const dateFin = new Date(dateFinInput.value);
+                
+                if (dateFin > dateDebut) {
+                    const diffMs = dateFin - dateDebut;
+                    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                    const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    
+                    durationDisplay.value = `${diffDays} jours ${diffHours} heures`;
+                    
+                    // Mettre à jour le prix estimé
+                    updateEstimatedPrice(diffDays, diffHours);
+                } else {
+                    durationDisplay.value = 'Dates invalides';
+                }
+            } else {
+                durationDisplay.value = '-- jours -- heures';
+            }
+        }
+        
+        function updateEstimatedPrice(days = 0, hours = 0) {
+            const estimatedPriceElement = document.getElementById('estimatedPrice');
+            const vehicleSelect = document.querySelector('select[name$="VehiculeId"]');
+            
+            if (!vehicleSelect || !vehicleSelect.value) {
+                estimatedPriceElement.textContent = '-- Ar';
+                return;
+            }
+            
+            // Pour l'exemple, on utilise un prix fixe
+            // En réalité, vous devriez récupérer le prix du véhicule via AJAX
+            const dailyPrice = 50000; // 50,000 Ar par jour
+            const hourlyPrice = dailyPrice / 24; // Prix horaire proportionnel
+            
+            let totalPrice = 0;
+            
+            if (days > 0) {
+                totalPrice += days * dailyPrice;
+            }
+            
+            if (hours > 0) {
+                totalPrice += hours * hourlyPrice;
+            }
+            
+            // Arrondir au millier supérieur
+            totalPrice = Math.ceil(totalPrice / 1000) * 1000;
+            
+            estimatedPriceElement.textContent = totalPrice.toLocaleString('fr-FR') + ' Ar';
+        }
+        
+        function setupValidation() {
+            const form = document.getElementById('reservationForm');
+            
+            form.addEventListener('submit', function(e) {
+                // Validation de la période
+                const dateDebutInput = document.querySelector('input[name$="DateDebut"]');
+                const dateFinInput = document.querySelector('input[name$="DateFin"]');
+                
+                if (dateDebutInput && dateDebutInput.value && dateFinInput && dateFinInput.value) {
+                    const dateDebut = new Date(dateDebutInput.value);
+                    const dateFin = new Date(dateFinInput.value);
+                    
+                    if (dateFin <= dateDebut) {
+                        e.preventDefault();
+                        showAlert('La date de fin doit être postérieure à la date de début.', 'danger');
+                        dateFinInput.focus();
+                        return false;
+                    }
+                    
+                    // Vérifier que la réservation n'est pas dans le passé (pour les modifications)
+                    const originalDateDebut = new Date('@Model.Reservation?.DateDebut.ToString("o")');
+                    if (dateDebut < originalDateDebut && !confirm('Vous modifiez la date de début pour une date antérieure à l\'originale. Êtes-vous sûr ?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                
+                // Validation du statut
+                const statusSelect = document.querySelector('select[name$="Status"]');
+                if (statusSelect && !statusSelect.value) {
+                    e.preventDefault();
+                    showAlert('Veuillez sélectionner un statut pour la réservation.', 'danger');
+                    statusSelect.focus();
+                    return false;
+                }
+                
+                // Demander confirmation pour les modifications importantes
+                const modificationNotes = document.getElementById('modificationNotes').value;
+                if (modificationNotes.trim() === '') {
+                    if (!confirm('Vous n\'avez pas ajouté de notes expliquant les modifications. Souhaitez-vous continuer ?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                
+                return true;
+            });
+            
+            // Confirmation avant de quitter avec des modifications
+            const form = document.getElementById('reservationForm');
+            let formChanged = false;
+            
+            form.addEventListener('input', function() {
+                formChanged = true;
+            });
+            
+            const cancelBtns = document.querySelectorAll('a[href*="Index"], a[href*="Details"]');
+            cancelBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (formChanged && !confirm('Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+        
+        function showAlert(message, type = 'danger') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+            alertDiv.innerHTML = `
+                <i class="lni lni-warning me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            const cardBody = document.querySelector('.card-body');
+            if (cardBody) {
+                const firstAlert = cardBody.querySelector('.alert');
+                if (firstAlert) {
+                    firstAlert.parentNode.insertBefore(alertDiv, firstAlert.nextSibling);
+                } else {
+                    cardBody.insertBefore(alertDiv, cardBody.firstChild);
+                }
+            }
+        }
+        
+        // Initialiser le récapitulatif au chargement
+        window.onload = function() {
+            updateRecap();
+            updateSelectedStatus(document.querySelector('select[name$="Status"]')?.value);
+        };
+    </script>
+    
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+        
+        .select2-selection {
+            height: 45px !important;
+            border: 1px solid #dee2e6 !important;
+            border-radius: 0.375rem !important;
+        }
+        
+        .select2-selection__rendered {
+            line-height: 45px !important;
+            padding-left: 12px !important;
+        }
+        
+        .select2-selection__arrow {
+            height: 45px !important;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 8px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #6c757d;
+            margin-right: 8px;
+        }
+        
+        .info-value {
+            font-weight: 600;
+            color: #4a6cf7;
+        }
+        
+        .duration-calculator .input-group {
+            margin-bottom: 4px;
+        }
+        
+        .card-header {
+            border-bottom: 1px solid #e9ecef;
+            padding: 1.5rem 1.5rem 0.75rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .badge {
+            font-size: 12px;
+            padding: 5px 10px;
+            font-weight: 500;
+        }
+        
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+        
+        input[type="datetime-local"] {
+            padding: 10px 12px;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .alert .btn-close {
+            padding: 1.25rem;
+        }
+        
+        table.table-sm th,
+        table.table-sm td {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+        
+        .client-info .badge,
+        .vehicle-info .badge {
+            font-size: 10px;
+            padding: 3px 6px;
+            margin-right: 5px;
+            margin-bottom: 2px;
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+    </style>
+</div>

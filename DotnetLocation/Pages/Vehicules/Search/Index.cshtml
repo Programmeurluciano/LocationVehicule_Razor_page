@@ -1,0 +1,601 @@
+﻿@page
+@model DotnetLocation.Pages.Vehicules.Search.IndexModel
+@{
+    ViewData["Title"] = "Recherche Véhicules";
+}
+
+<div class="title-wrapper pt-30">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="title">
+                <h2>Recherche Véhicules</h2>
+            </div>
+        </div>
+        <!-- end col -->
+        <div class="col-md-6">
+            <div class="breadcrumb-wrapper">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/">
+                                Tableau de bord
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-page="/Vehicules/Index">
+                                Véhicules
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Recherche
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+<!-- ========== title-wrapper end ========== -->
+
+<div class="tables-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="card-header">
+                    <h6 class="mb-1">Recherche de véhicules</h6>
+                    <p class="text-sm mb-0">
+                        Recherchez des véhicules par marque, modèle, catégorie...
+                    </p>
+                </div>
+
+                <div class="card-body">
+                    <!-- Formulaire de recherche avec filtre catégorie -->
+                    <form method="get" class="search-form mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label fw-500 text-muted mb-1">
+                                    <i class="lni lni-search me-1"></i> Recherche
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">
+                                        <i class="lni lni-search-alt text-muted"></i>
+                                    </span>
+                                    <input type="text"
+                                           name="SearchTerm"
+                                           value="@Model.SearchTerm"
+                                           class="form-control border-start-0"
+                                           placeholder="Marque, modèle, transmission, carburant..." />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-500 text-muted mb-1">
+                                    <i class="lni lni-tag me-1"></i> Catégorie
+                                </label>
+                                <select name="CategorieId" class="form-select">
+                                    <option value="">Toutes les catégories</option>
+                                    @foreach (var cat in Model.Categories)
+                                    {
+                                        <option value="@cat.Id" selected="@(cat.Id == Model.CategorieId)">
+                                            @cat.Nom
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="main-btn primary-btn w-100">
+                                    <i class="lni lni-search me-2"></i> Rechercher
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.SearchTerm) || Model.CategorieId.HasValue)
+                    {
+                        <!-- Résumé de la recherche -->
+                        <div class="results-summary mb-4">
+                            <div class="alert alert-light border-0 bg-light d-flex align-items-center">
+                                <i class="lni lni-stats-up me-3 text-primary" style="font-size: 1.5rem;"></i>
+                                <div>
+                                    <strong>@Model.TotalResults</strong> véhicule(s) trouvé(s)
+                                    @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+                                    {
+                                        <span>pour "<strong>@Model.SearchTerm</strong>"</span>
+                                    }
+                                    @if (Model.CategorieId.HasValue)
+                                    {
+                                        var categorie = Model.Categories.FirstOrDefault(c => c.Id == Model.CategorieId);
+                                        if (categorie != null)
+                                        {
+                                            <span>dans la catégorie <strong>@categorie.Nom</strong></span>
+                                        }
+                                    }
+                                </div>
+                                <a href="?SearchTerm=&CategorieId=" class="ms-auto text-decoration-none">
+                                    <i class="lni lni-close"></i> Effacer
+                                </a>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Table de résultats -->
+                    <div class="table-wrapper table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 60px;">ID</th>
+                                    <th>Marque</th>
+                                    <th>Modèle</th>
+                                    <th>Catégorie</th>
+                                    <th>Transmission</th>
+                                    <th>Carburant</th>
+                                    <th class="text-end">Prix</th>
+                                    <th class="text-center">Disponibilité</th>
+                                    <th class="text-center" style="width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in Model.Vehicules)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            <span class="badge bg-light text-dark">#@v.Vehicule_Data.Id</span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="vehicle-avatar bg-success-light me-2">
+                                                    <i class="lni lni-car"></i>
+                                                </div>
+                                                <strong>@v.Vehicule_Data.Marque</strong>
+                                            </div>
+                                        </td>
+                                        <td>@v.Vehicule_Data.Model</td>
+                                        <td>
+                                            <span>@v.Vehicule_Data.CategorieNom</span>
+                                        </td>
+                                        <td>
+                                            @if (v.Vehicule_Data.Transmission == "Automatique")
+                                            {
+                                                <span class="badge bg-primary">Automatique</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Manuelle</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @switch (v.Vehicule_Data.Carburant?.ToLower())
+                                            {
+                                                case "essence":
+                                                    <span class="badge bg-warning">Essence</span>
+                                                    break;
+                                                case "diesel":
+                                                    <span class="badge bg-dark">Diesel</span>
+                                                    break;
+                                                case "electrique":
+                                                    <span class="badge bg-success">Électrique</span>
+                                                    break;
+                                                case "hybride":
+                                                    <span class="badge bg-info">Hybride</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge bg-secondary">@v.Vehicule_Data.Carburant</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td class="text-end">
+                                            <strong class="text-primary">@v.Vehicule_Data.Prix.ToString("N0")</strong> <small>Ar</small>
+                                        </td>
+                                        <td class="text-center">
+                                            @if (v.Vehicule_Data.Disponibilite)
+                                            {
+                                                <span class="badge bg-success">Disponible</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">Indisponible</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="action-buttons">
+                                                <a asp-page="/Vehicules/Details"
+                                                   asp-route-id="@v.Vehicule_Data.Id"
+                                                   class="action-btn view-btn"
+                                                   title="Voir détails">
+                                                    <i class="lni lni-eye"></i>
+                                                </a>
+                                                <a asp-page="/Vehicules/Edit"
+                                                   asp-route-id="@v.Vehicule_Data.Id"
+                                                   class="action-btn edit-btn"
+                                                   title="Modifier">
+                                                    <i class="lni lni-pencil"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!Model.Vehicules.Any())
+                                {
+                                    <tr>
+                                        <td colspan="9" class="text-center py-5">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="lni lni-car"></i>
+                                                </div>
+                                                <h6 class="mt-3">Aucun véhicule trouvé</h6>
+                                                <p class="text-muted">
+                                                    Aucun véhicule ne correspond à vos critères de recherche
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    @if (Model.TotalResults > 0)
+                    {
+                        var totalPages = (int)Math.Ceiling((double)Model.TotalResults / Model.PageSize);
+
+                        <div class="pagination-wrapper mt-4 d-flex justify-content-between align-items-center">
+                            <div class="pagination-info text-muted">
+                                Page @Model.PageNumber sur @totalPages
+                                (@(((Model.PageNumber - 1) * Model.PageSize) + 1) -
+                                @Math.Min(Model.PageNumber * Model.PageSize, Model.TotalResults)
+                                sur @Model.TotalResults véhicules)
+                            </div>
+
+                            <nav aria-label="Navigation des pages">
+                                <ul class="pagination">
+                                    <!-- Bouton Précédent -->
+                                    <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                                        <a class="page-link"
+                                           href="?SearchTerm=@Model.SearchTerm&CategorieId=@Model.CategorieId&Page=@(Model.PageNumber - 1)"
+                                           aria-label="Précédent">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Pages -->
+                                    @{
+                                        var startPage = Math.Max(1, Model.PageNumber - 2);
+                                        var endPage = Math.Min(totalPages, startPage + 4);
+                                        startPage = Math.Max(1, endPage - 4);
+                                    }
+
+                                    @if (startPage > 1)
+                                    {
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="?SearchTerm=@Model.SearchTerm&CategorieId=@Model.CategorieId&Page=1">1</a>
+                                        </li>
+                                        @if (startPage > 2)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                    }
+
+                                    @for (int i = startPage; i <= endPage; i++)
+                                    {
+                                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                            <a class="page-link"
+                                               href="?SearchTerm=@Model.SearchTerm&CategorieId=@Model.CategorieId&Page=@i">@i</a>
+                                        </li>
+                                    }
+
+                                    @if (endPage < totalPages)
+                                    {
+                                        @if (endPage < totalPages - 1)
+                                        {
+                                            <li class="page-item disabled">
+                                                <span class="page-link">...</span>
+                                            </li>
+                                        }
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                               href="?SearchTerm=@Model.SearchTerm&CategorieId=@Model.CategorieId&Page=@totalPages">@totalPages</a>
+                                        </li>
+                                    }
+
+                                    <!-- Bouton Suivant -->
+                                    <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+                                        <a class="page-link"
+                                           href="?SearchTerm=@Model.SearchTerm&CategorieId=@Model.CategorieId&Page=@(Model.PageNumber + 1)"
+                                           aria-label="Suivant">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    }
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+    </div>
+    <!-- end row -->
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-submit après changement de catégorie (optionnel)
+            const categorieSelect = document.querySelector('select[name="CategorieId"]');
+            const searchForm = document.querySelector('.search-form');
+
+            if (categorieSelect && searchForm) {
+                categorieSelect.addEventListener('change', () => {
+                    searchForm.submit();
+                });
+            }
+
+            // Délai pour la recherche textuelle
+            const searchInput = document.querySelector('input[name="SearchTerm"]');
+            if (searchInput && searchForm) {
+                let timeout = null;
+                searchInput.addEventListener('keyup', function(e) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            searchForm.submit();
+                        }
+                    }, 500);
+                });
+            }
+        });
+    </script>
+}
+
+<style>
+    /* Avatars véhicules */
+    .vehicle-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .bg-success-light {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+    /* Table */
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+    /* Badges */
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+        font-weight: 500;
+    }
+
+    .bg-primary {
+        background-color: #4a6cf7 !important;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+        color: #212529 !important;
+    }
+
+    .bg-info {
+        background-color: #17a2b8 !important;
+    }
+
+    .bg-dark {
+        background-color: #343a40 !important;
+    }
+
+    .bg-secondary {
+        background-color: #6c757d !important;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+
+    /* Boutons d'action */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .view-btn {
+        background: rgba(74, 108, 247, 0.1);
+        color: #4a6cf7;
+    }
+
+        .view-btn:hover {
+            background: #4a6cf7;
+            color: white;
+        }
+
+    .edit-btn {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+        .edit-btn:hover {
+            background: #28a745;
+            color: white;
+        }
+
+    /* État vide */
+    .empty-state {
+        padding: 3rem 1rem;
+    }
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 2rem;
+        color: #dee2e6;
+    }
+
+    /* Pagination */
+    .pagination {
+        margin-bottom: 0;
+        gap: 0.25rem;
+    }
+
+    .page-link {
+        border: 1px solid #dee2e6;
+        color: #4a6cf7;
+        border-radius: 8px !important;
+        margin: 0 2px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+        .page-link:hover {
+            background: #e9ecef;
+            border-color: #4a6cf7;
+            color: #4a6cf7;
+        }
+
+    .page-item.active .page-link {
+        background: #4a6cf7;
+        border-color: #4a6cf7;
+        color: white;
+    }
+
+    .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background: #f8f9fa;
+        border-color: #dee2e6;
+    }
+
+    /* Alert */
+    .alert-light {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1rem;
+    }
+
+    /* Boutons principaux */
+    .main-btn {
+        display: inline-block;
+        font-weight: 500;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        border: 1px solid transparent;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .primary-btn {
+        background: #4a6cf7;
+        color: #fff;
+    }
+
+        .primary-btn:hover {
+            background: #3a56d4;
+            color: #fff;
+        }
+
+    /* Formulaires */
+    .form-label {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .input-group-text {
+        border-radius: 0.5rem 0 0 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+
+    .form-control, .form-select {
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 0.2rem rgba(74, 108, 247, 0.25);
+        }
+
+    .input-group .form-control {
+        border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    /* Utilitaires */
+    .text-primary {
+        color: #4a6cf7 !important;
+    }
+
+    .text-muted {
+        color: #718096 !important;
+    }
+
+    .fw-500 {
+        font-weight: 500 !important;
+    }
+
+    .text-decoration-none {
+        text-decoration: none;
+    }
+</style>

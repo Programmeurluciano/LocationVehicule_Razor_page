@@ -28,7 +28,10 @@ namespace DotnetLocation.Pages.Reservations
                 return NotFound();
             }
 
-            var reservation = await _context.Reservations.FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await _context.Reservations
+                .Include(v => v.Client)
+                .Include(v => v.Vehicule)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (reservation is not null)
             {
